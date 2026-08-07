@@ -146,16 +146,19 @@ export function AppSidebar({
     <Link
       to={item.to}
       onClick={onCloseMobile}
-      title={collapsed ? item.label : undefined}
+      title={item.label}
       aria-current={isActive(item.to) ? "page" : undefined}
-      className={`group/item flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-all duration-200 ${
+      className={`group/item relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm transition-colors duration-150 ${
         collapsed ? "justify-center px-0" : ""
       } ${
         isActive(item.to)
-          ? "bg-primary/15 text-foreground ring-1 ring-primary/25"
-          : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+          ? "bg-primary/18 font-medium text-foreground"
+          : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
       }`}
     >
+      {isActive(item.to) && (
+        <span className="absolute bottom-1.5 left-0 top-1.5 w-[2px] rounded-full bg-primary" />
+      )}
       <item.icon className="h-4 w-4 shrink-0" />
       {!collapsed && <span className="truncate">{item.label}</span>}
     </Link>
