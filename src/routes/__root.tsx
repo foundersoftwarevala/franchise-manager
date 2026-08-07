@@ -4,13 +4,21 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
+
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { TopBar } from "../components/boss/TopBar";
+import { AppSidebar, useSidebarState } from "../components/boss/AppSidebar";
+import { SessionProvider } from "../lib/session";
+import { ToastProvider } from "../lib/toast";
+import { ApprovalsProvider } from "../lib/approvals";
+
 
 function NotFoundComponent() {
   return (
@@ -77,22 +85,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Franchise Manager — Software Vala Boss Panel" },
+      { name: "description", content: "Control panel for franchise applications, licenses, revenue, commission and compliance." },
+      { property: "og:title", content: "Franchise Manager — Software Vala Boss Panel" },
+      { property: "og:description", content: "Control panel for franchise applications, licenses, revenue, commission and compliance." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
+
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -119,8 +128,54 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <SessionProvider>
+        <ToastProvider>
+          <ApprovalsProvider>
+            <BossShell />
+          </ApprovalsProvider>
+        </ToastProvider>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }
+
+function BossShell() {
+  const { collapsed, toggleCollapsed, mobileOpen, setMobileOpen } = useSidebarState();
+  const isLoading = useRouterState({ select: (s) => s.status === "pending" });
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => setHydrated(true), []);
+
+  // Enterprise expectation: navigating a wall starts you at the top of it.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [pathname]);
+
+  return (
+    <div className="flex min-h-screen w-full">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      {hydrated && isLoading && (
+        <div className="route-progress" role="status" aria-label="Loading page" />
+      )}
+      <AppSidebar
+        collapsed={collapsed}
+        onToggleCollapsed={toggleCollapsed}
+        mobileOpen={mobileOpen}
+        onCloseMobile={() => setMobileOpen(false)}
+      />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <TopBar onOpenMenu={() => setMobileOpen(true)} />
+        <main id="main-content" tabIndex={-1} className="min-w-0 flex-1 focus:outline-none">
+          <div key={pathname} className="page-enter">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+
