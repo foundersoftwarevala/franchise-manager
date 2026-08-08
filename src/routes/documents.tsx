@@ -7,7 +7,11 @@ import { StatusBadge } from "@/components/boss/StatusBadge";
 import { ExportMenu } from "@/components/boss/ExportMenu";
 import { useDocuments, type StoredDocument } from "@/lib/approvals";
 import { useDocumentRecords } from "@/lib/data-hooks";
-import { FileText } from "lucide-react";
+import { useDocumentLink, useUploadDocuments } from "@/lib/documents-hooks";
+import { useToast } from "@/lib/toast";
+import { Btn } from "@/components/boss/Wall";
+import { Modal } from "@/components/boss/Modal";
+import { ExternalLink, FileText, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/documents")({
   head: () => ({ meta: [{ title: "Documents · Boss Panel" }] }),
