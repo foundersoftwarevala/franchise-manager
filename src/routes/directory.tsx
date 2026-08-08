@@ -58,6 +58,9 @@ function DirectoryWall() {
   const [tier, setTier] = useState("");
   const [country, setCountry] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [controlsOpen, setControlsOpen] = useState(false);
+  const [controls, setControls] = useState({ royaltyRate: "0", pricingVariation: "0", leadRouting: false });
+  const saveControls = useUpdateFranchiseControls();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [sortBy, setSortBy] = useState("revenueMtd");
