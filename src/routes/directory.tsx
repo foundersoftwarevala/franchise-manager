@@ -14,6 +14,8 @@ import { HealthBar, HealthIndicator } from "@/components/boss/HealthIndicator";
 import { ActivitySection, ComplianceSection } from "@/components/boss/DetailSections";
 import { Tip } from "@/components/boss/Tooltip";
 import { useFranchises, type Franchise } from "@/lib/data-hooks";
+import { useUpdateFranchiseControls } from "@/lib/settings-hooks";
+import { Modal } from "@/components/boss/Modal";
 import { useCan } from "@/lib/session";
 import { useToast } from "@/lib/toast";
 import { useShortcuts } from "@/lib/shortcuts";
