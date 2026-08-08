@@ -1,7 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
+  AlertTriangle,
   Award,
+  Bell,
+  FileSignature,
+  Gauge,
+  Receipt,
+  ShieldAlert,
   BarChart3,
   BookOpen,
   Briefcase,
