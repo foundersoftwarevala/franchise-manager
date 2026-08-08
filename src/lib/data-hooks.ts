@@ -52,6 +52,9 @@ export type Franchise = {
   revenueMtd: number;
   healthScore: number;
   riskLevel: RiskLevel;
+  royaltyRate: number;
+  pricingVariation: number;
+  leadRouting: boolean;
 };
 
 export type Territory = {
