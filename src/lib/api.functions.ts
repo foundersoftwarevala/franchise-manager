@@ -232,6 +232,8 @@ export const listDocuments = createServerFn({ method: "GET" }).handler(async () 
     size: doc.size,
     status: doc.status,
     uploadedAt: doc.uploaded_at,
+    storagePath: doc.storage_path ?? null,
+    uploadedBy: doc.uploaded_by ?? "—",
   }));
 });
 
