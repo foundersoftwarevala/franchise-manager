@@ -14,6 +14,7 @@ import {
 import { useApplications, type Application } from "@/lib/data-hooks";
 import { useCan } from "@/lib/session";
 import { useToast } from "@/lib/toast";
+import { useApproveApplication } from "@/lib/settings-hooks";
 import { useShortcuts } from "@/lib/shortcuts";
 import { CheckCircle2, Plus, UserCog, XCircle } from "lucide-react";
 
