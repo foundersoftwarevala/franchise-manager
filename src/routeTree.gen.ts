@@ -24,6 +24,7 @@ import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as LicenseRouteImport } from './routes/license'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as LeadsRouteImport } from './routes/leads'
+import { Route as FraudRouteImport } from './routes/fraud'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DirectoryRouteImport } from './routes/directory'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -111,6 +112,11 @@ const LeadsRoute = LeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FraudRoute = FraudRouteImport.update({
+  id: '/fraud',
+  path: '/fraud',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DocumentsRoute = DocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
@@ -179,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/directory': typeof DirectoryRoute
   '/documents': typeof DocumentsRoute
+  '/fraud': typeof FraudRoute
   '/leads': typeof LeadsRoute
   '/legal': typeof LegalRoute
   '/license': typeof LicenseRoute
@@ -207,6 +214,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/directory': typeof DirectoryRoute
   '/documents': typeof DocumentsRoute
+  '/fraud': typeof FraudRoute
   '/leads': typeof LeadsRoute
   '/legal': typeof LegalRoute
   '/license': typeof LicenseRoute
@@ -236,6 +244,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/directory': typeof DirectoryRoute
   '/documents': typeof DocumentsRoute
+  '/fraud': typeof FraudRoute
   '/leads': typeof LeadsRoute
   '/legal': typeof LegalRoute
   '/license': typeof LicenseRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/directory'
     | '/documents'
+    | '/fraud'
     | '/leads'
     | '/legal'
     | '/license'
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/directory'
     | '/documents'
+    | '/fraud'
     | '/leads'
     | '/legal'
     | '/license'
@@ -322,6 +333,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/directory'
     | '/documents'
+    | '/fraud'
     | '/leads'
     | '/legal'
     | '/license'
@@ -351,6 +363,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   DirectoryRoute: typeof DirectoryRoute
   DocumentsRoute: typeof DocumentsRoute
+  FraudRoute: typeof FraudRoute
   LeadsRoute: typeof LeadsRoute
   LegalRoute: typeof LegalRoute
   LicenseRoute: typeof LicenseRoute
@@ -475,6 +488,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fraud': {
+      id: '/fraud'
+      path: '/fraud'
+      fullPath: '/fraud'
+      preLoaderRoute: typeof FraudRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/documents': {
       id: '/documents'
       path: '/documents'
@@ -567,6 +587,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   DirectoryRoute: DirectoryRoute,
   DocumentsRoute: DocumentsRoute,
+  FraudRoute: FraudRoute,
   LeadsRoute: LeadsRoute,
   LegalRoute: LegalRoute,
   LicenseRoute: LicenseRoute,
