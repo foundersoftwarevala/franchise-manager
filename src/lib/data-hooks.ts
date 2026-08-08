@@ -199,6 +199,8 @@ export type DocumentRecord = {
   size: number;
   status: string;
   uploadedAt: string;
+  storagePath: string | null;
+  uploadedBy: string;
 };
 
 const STALE = 30_000;
