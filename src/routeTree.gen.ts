@@ -13,6 +13,7 @@ import { Route as UsersRouteImport } from './routes/users'
 import { Route as TrainingRouteImport } from './routes/training'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RoyaltiesRouteImport } from './routes/royalties'
 import { Route as RevenueRouteImport } from './routes/revenue'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RegionsRouteImport } from './routes/regions'
@@ -52,6 +53,11 @@ const SupportRoute = SupportRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoyaltiesRoute = RoyaltiesRouteImport.update({
+  id: '/royalties',
+  path: '/royalties',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RevenueRoute = RevenueRouteImport.update({
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/regions': typeof RegionsRoute
   '/reports': typeof ReportsRoute
   '/revenue': typeof RevenueRoute
+  '/royalties': typeof RoyaltiesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/training': typeof TrainingRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/regions': typeof RegionsRoute
   '/reports': typeof ReportsRoute
   '/revenue': typeof RevenueRoute
+  '/royalties': typeof RoyaltiesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/training': typeof TrainingRoute
@@ -229,6 +237,7 @@ export interface FileRoutesById {
   '/regions': typeof RegionsRoute
   '/reports': typeof ReportsRoute
   '/revenue': typeof RevenueRoute
+  '/royalties': typeof RoyaltiesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/training': typeof TrainingRoute
@@ -257,6 +266,7 @@ export interface FileRouteTypes {
     | '/regions'
     | '/reports'
     | '/revenue'
+    | '/royalties'
     | '/settings'
     | '/support'
     | '/training'
@@ -283,6 +293,7 @@ export interface FileRouteTypes {
     | '/regions'
     | '/reports'
     | '/revenue'
+    | '/royalties'
     | '/settings'
     | '/support'
     | '/training'
@@ -309,6 +320,7 @@ export interface FileRouteTypes {
     | '/regions'
     | '/reports'
     | '/revenue'
+    | '/royalties'
     | '/settings'
     | '/support'
     | '/training'
@@ -336,6 +348,7 @@ export interface RootRouteChildren {
   RegionsRoute: typeof RegionsRoute
   ReportsRoute: typeof ReportsRoute
   RevenueRoute: typeof RevenueRoute
+  RoyaltiesRoute: typeof RoyaltiesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
   TrainingRoute: typeof TrainingRoute
@@ -370,6 +383,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/royalties': {
+      id: '/royalties'
+      path: '/royalties'
+      fullPath: '/royalties'
+      preLoaderRoute: typeof RoyaltiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/revenue': {
@@ -536,6 +556,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegionsRoute: RegionsRoute,
   ReportsRoute: ReportsRoute,
   RevenueRoute: RevenueRoute,
+  RoyaltiesRoute: RoyaltiesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
   TrainingRoute: TrainingRoute,
