@@ -89,7 +89,21 @@ function DocumentsWall() {
     [documents],
   );
 
-  const columns: Column<StoredDocument>[] = [
+  const openFile = (d: VaultDoc) => {
+    if (!d.storagePath) {
+      toast({ title: "No stored file", description: "This record has no file in the vault yet.", tone: "warning" });
+      return;
+    }
+    link.mutate(
+      { storagePath: d.storagePath },
+      {
+        onSuccess: (res) => window.open(res.url, "_blank", "noopener,noreferrer"),
+        onError: (e: Error) => toast({ title: "Could not open file", description: e.message, tone: "destructive" }),
+      },
+    );
+  };
+
+  const columns: Column<VaultDoc>[] = [
     {
       id: "name",
       header: "Document",
@@ -116,8 +130,24 @@ function DocumentsWall() {
       ),
     },
     { id: "size", header: "Size", cell: (d) => <span className="text-muted-foreground">{(d.size / 1024).toFixed(0)} KB</span> },
+    { id: "uploadedBy", header: "Uploaded by", cell: (d) => <span className="text-muted-foreground">{d.uploadedBy}</span> },
     { id: "uploadedAt", header: "Uploaded", cell: (d) => <span className="text-muted-foreground">{d.uploadedAt}</span> },
     { id: "status", header: "Status", cell: (d) => <StatusBadge status={d.status === "verified" ? "approved" : d.status === "pending_review" ? "pending" : "issued"}>{d.status.replace("_", " ")}</StatusBadge> },
+    {
+      id: "file",
+      header: "File",
+      cell: (d) =>
+        d.storagePath ? (
+          <button
+            onClick={(e) => { e.stopPropagation(); openFile(d); }}
+            className="inline-flex items-center gap-1 text-[11.5px] text-primary hover:underline"
+          >
+            <ExternalLink className="h-3.5 w-3.5" /> Open
+          </button>
+        ) : (
+          <span className="text-[11.5px] text-muted-foreground">—</span>
+        ),
+    },
   ];
 
   return (
