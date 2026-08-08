@@ -379,6 +379,9 @@ function DirectoryWall() {
               <MiniStat label="Owner" value={active.owner} />
               <MiniStat label="Location" value={[active.city, active.country].filter(Boolean).join(", ")} />
               <MiniStat label="Commission" value={`${active.commissionPct.toFixed(1)}%`} />
+              <MiniStat label="Royalty Rate" value={`${active.royaltyRate.toFixed(1)}%`} />
+              <MiniStat label="Pricing Variation" value={`±${active.pricingVariation.toFixed(1)}%`} />
+              <MiniStat label="Lead Routing" value={active.leadRouting ? "Enabled" : "Disabled"} />
               <MiniStat label="Licenses" value={active.licenses} />
               <MiniStat label="Revenue MTD" value={`$${active.revenueMtd.toLocaleString()}`} />
               <MiniStat label="Products" value={active.productsAssigned} />
