@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.fm_approve_application(uuid, text) FROM anon, authenticated;
