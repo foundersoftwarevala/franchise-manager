@@ -20,6 +20,7 @@ import { Route as RegionsRouteImport } from './routes/regions'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as PerformanceRouteImport } from './routes/performance'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as LicenseRouteImport } from './routes/license'
 import { Route as LegalRouteImport } from './routes/legal'
@@ -91,6 +92,11 @@ const PerformanceRoute = PerformanceRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketingRoute = MarketingRouteImport.update({
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/legal': typeof LegalRoute
   '/license': typeof LicenseRoute
   '/marketing': typeof MarketingRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/performance': typeof PerformanceRoute
   '/products': typeof ProductsRoute
@@ -227,6 +234,7 @@ export interface FileRoutesByTo {
   '/legal': typeof LegalRoute
   '/license': typeof LicenseRoute
   '/marketing': typeof MarketingRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/performance': typeof PerformanceRoute
   '/products': typeof ProductsRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/legal': typeof LegalRoute
   '/license': typeof LicenseRoute
   '/marketing': typeof MarketingRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/performance': typeof PerformanceRoute
   '/products': typeof ProductsRoute
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/license'
     | '/marketing'
+    | '/notifications'
     | '/onboarding'
     | '/performance'
     | '/products'
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/license'
     | '/marketing'
+    | '/notifications'
     | '/onboarding'
     | '/performance'
     | '/products'
@@ -350,6 +361,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/license'
     | '/marketing'
+    | '/notifications'
     | '/onboarding'
     | '/performance'
     | '/products'
@@ -381,6 +393,7 @@ export interface RootRouteChildren {
   LegalRoute: typeof LegalRoute
   LicenseRoute: typeof LicenseRoute
   MarketingRoute: typeof MarketingRoute
+  NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
   PerformanceRoute: typeof PerformanceRoute
   ProductsRoute: typeof ProductsRoute
@@ -471,6 +484,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marketing': {
@@ -613,6 +633,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalRoute: LegalRoute,
   LicenseRoute: LicenseRoute,
   MarketingRoute: MarketingRoute,
+  NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
   PerformanceRoute: PerformanceRoute,
   ProductsRoute: ProductsRoute,

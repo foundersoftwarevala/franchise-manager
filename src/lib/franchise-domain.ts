@@ -119,6 +119,30 @@ export const STATUS_TONE: Record<
   issued: "info",
   overdue: "destructive",
   void: "neutral",
+  // Royalty statuses
+  due: "warning",
+  partial: "info",
+  // Fraud / escalation statuses
+  open: "warning",
+  investigating: "info",
+  in_progress: "info",
+  resolved: "success",
+  closed: "neutral",
+  dismissed: "neutral",
+  // Severity / priority
+  low: "neutral",
+  medium: "info",
+  high: "warning",
+  critical: "destructive",
+  // Contract statuses
+  not_due: "neutral",
+  due_soon: "warning",
+  at_risk: "destructive",
+  under_review: "info",
+  // Notification types
+  info: "info",
+  warning: "warning",
+  success: "success",
 };
 
 export const STAGE_LABEL: Record<ApplicationStage, string> = {
