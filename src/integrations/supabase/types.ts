@@ -550,6 +550,39 @@ export type Database = {
           },
         ]
       }
+      franchise_settings: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          key: string
+          label: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          key: string
+          label: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          key?: string
+          label?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       franchises: {
         Row: {
           city: string
@@ -560,11 +593,14 @@ export type Database = {
           created_at: string
           health_score: number
           id: string
+          lead_routing: boolean
           licenses: number
           owner: string
+          pricing_variation: number
           products_assigned: number
           revenue_mtd: number
           risk_level: string
+          royalty_rate: number
           state: string
           status: string
           tier: string
@@ -579,11 +615,14 @@ export type Database = {
           created_at?: string
           health_score?: number
           id?: string
+          lead_routing?: boolean
           licenses?: number
           owner: string
+          pricing_variation?: number
           products_assigned?: number
           revenue_mtd?: number
           risk_level?: string
+          royalty_rate?: number
           state?: string
           status?: string
           tier?: string
@@ -598,11 +637,14 @@ export type Database = {
           created_at?: string
           health_score?: number
           id?: string
+          lead_routing?: boolean
           licenses?: number
           owner?: string
+          pricing_variation?: number
           products_assigned?: number
           revenue_mtd?: number
           risk_level?: string
+          royalty_rate?: number
           state?: string
           status?: string
           tier?: string
@@ -820,7 +862,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      fm_approve_application: {
+        Args: { _application_id: string; _reviewer?: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
