@@ -32,6 +32,7 @@ function ApplicationsWall() {
   const canApprove = useCan("application.approve");
   const canReject = useCan("application.reject");
   const { toast } = useToast();
+  const approve = useApproveApplication();
 
   const [tab, setTab] = useState<ApplicationStage | "all">("all");
   const [search, setSearch] = useState("");
