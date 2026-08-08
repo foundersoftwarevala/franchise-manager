@@ -351,13 +351,21 @@ function DirectoryWall() {
             >
               <Power className="h-3.5 w-3.5" /> Suspend
             </Btn>
-            <Tip label={canWrite ? "Edit franchise details" : "Requires the franchise.write permission"}>
+            <Tip label={canWrite ? "Edit royalty, pricing and lead-routing controls" : "Requires the franchise.write permission"}>
               <Btn
                 variant="primary"
                 disabled={!canWrite}
-                onClick={() => toast({ title: "Edit franchise", description: "Inline editing unlocks with the franchise database.", tone: "info" })}
+                onClick={() => {
+                  if (!active) return;
+                  setControls({
+                    royaltyRate: String(active.royaltyRate),
+                    pricingVariation: String(active.pricingVariation),
+                    leadRouting: active.leadRouting,
+                  });
+                  setControlsOpen(true);
+                }}
               >
-                <Pencil className="h-3.5 w-3.5" /> Edit
+                <Pencil className="h-3.5 w-3.5" /> Edit Controls
               </Btn>
             </Tip>
           </div>
