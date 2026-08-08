@@ -17,6 +17,7 @@ import { Route as RevenueRouteImport } from './routes/revenue'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RegionsRouteImport } from './routes/regions'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as PerformanceRouteImport } from './routes/performance'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as LicenseRouteImport } from './routes/license'
@@ -71,6 +72,11 @@ const RegionsRoute = RegionsRouteImport.update({
 const ProductsRoute = ProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerformanceRoute = PerformanceRouteImport.update({
+  id: '/performance',
+  path: '/performance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/license': typeof LicenseRoute
   '/marketing': typeof MarketingRoute
   '/onboarding': typeof OnboardingRoute
+  '/performance': typeof PerformanceRoute
   '/products': typeof ProductsRoute
   '/regions': typeof RegionsRoute
   '/reports': typeof ReportsRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/license': typeof LicenseRoute
   '/marketing': typeof MarketingRoute
   '/onboarding': typeof OnboardingRoute
+  '/performance': typeof PerformanceRoute
   '/products': typeof ProductsRoute
   '/regions': typeof RegionsRoute
   '/reports': typeof ReportsRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/license': typeof LicenseRoute
   '/marketing': typeof MarketingRoute
   '/onboarding': typeof OnboardingRoute
+  '/performance': typeof PerformanceRoute
   '/products': typeof ProductsRoute
   '/regions': typeof RegionsRoute
   '/reports': typeof ReportsRoute
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
     | '/license'
     | '/marketing'
     | '/onboarding'
+    | '/performance'
     | '/products'
     | '/regions'
     | '/reports'
@@ -268,6 +278,7 @@ export interface FileRouteTypes {
     | '/license'
     | '/marketing'
     | '/onboarding'
+    | '/performance'
     | '/products'
     | '/regions'
     | '/reports'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/license'
     | '/marketing'
     | '/onboarding'
+    | '/performance'
     | '/products'
     | '/regions'
     | '/reports'
@@ -319,6 +331,7 @@ export interface RootRouteChildren {
   LicenseRoute: typeof LicenseRoute
   MarketingRoute: typeof MarketingRoute
   OnboardingRoute: typeof OnboardingRoute
+  PerformanceRoute: typeof PerformanceRoute
   ProductsRoute: typeof ProductsRoute
   RegionsRoute: typeof RegionsRoute
   ReportsRoute: typeof ReportsRoute
@@ -385,6 +398,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/performance': {
+      id: '/performance'
+      path: '/performance'
+      fullPath: '/performance'
+      preLoaderRoute: typeof PerformanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -511,6 +531,7 @@ const rootRouteChildren: RootRouteChildren = {
   LicenseRoute: LicenseRoute,
   MarketingRoute: MarketingRoute,
   OnboardingRoute: OnboardingRoute,
+  PerformanceRoute: PerformanceRoute,
   ProductsRoute: ProductsRoute,
   RegionsRoute: RegionsRoute,
   ReportsRoute: ReportsRoute,
@@ -523,13 +544,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
