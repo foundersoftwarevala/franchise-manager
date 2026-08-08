@@ -223,7 +223,7 @@ function ApplicationsWall() {
                 approve.mutate(
                   { id: active.id },
                   {
-                    onSuccess: (res) => {
+                    onSuccess: () => {
                       toast({
                         title: "Application approved",
                         description: `${active.company} approved — franchise record created.`,
