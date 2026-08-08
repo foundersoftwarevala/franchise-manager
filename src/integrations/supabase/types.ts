@@ -232,6 +232,324 @@ export type Database = {
         }
         Relationships: []
       }
+      franchise_contracts: {
+        Row: {
+          contract_no: string
+          contract_type: string
+          created_at: string
+          end_date: string
+          franchise: string
+          franchise_id: string | null
+          id: string
+          renewal_status: string
+          signed_at: string | null
+          start_date: string
+          status: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          contract_no: string
+          contract_type?: string
+          created_at?: string
+          end_date?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          renewal_status?: string
+          signed_at?: string | null
+          start_date?: string
+          status?: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          contract_no?: string
+          contract_type?: string
+          created_at?: string
+          end_date?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          renewal_status?: string
+          signed_at?: string | null
+          start_date?: string
+          status?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchise_contracts_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      franchise_escalations: {
+        Row: {
+          assigned_to: string
+          category: string
+          created_at: string
+          franchise: string
+          franchise_id: string | null
+          id: string
+          priority: string
+          raised_by: string
+          resolution: string | null
+          sla_due: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string
+          category?: string
+          created_at?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          priority?: string
+          raised_by?: string
+          resolution?: string | null
+          sla_due?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string
+          category?: string
+          created_at?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          priority?: string
+          raised_by?: string
+          resolution?: string | null
+          sla_due?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchise_escalations_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      franchise_fraud_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          description: string
+          detected_at: string
+          franchise: string
+          franchise_id: string | null
+          id: string
+          risk_score: number
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          description?: string
+          detected_at?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          risk_score?: number
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          description?: string
+          detected_at?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          risk_score?: number
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchise_fraud_alerts_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      franchise_notifications: {
+        Row: {
+          channel: string
+          created_at: string
+          franchise: string
+          franchise_id: string | null
+          id: string
+          message: string
+          read: boolean
+          title: string
+          type: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          message?: string
+          read?: boolean
+          title: string
+          type?: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          message?: string
+          read?: boolean
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchise_notifications_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      franchise_performance: {
+        Row: {
+          conversions: number
+          created_at: string
+          csat: number
+          franchise: string
+          franchise_id: string | null
+          id: string
+          leads: number
+          period: string
+          revenue: number
+          sla_percent: number
+          tickets: number
+          updated_at: string
+        }
+        Insert: {
+          conversions?: number
+          created_at?: string
+          csat?: number
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          leads?: number
+          period: string
+          revenue?: number
+          sla_percent?: number
+          tickets?: number
+          updated_at?: string
+        }
+        Update: {
+          conversions?: number
+          created_at?: string
+          csat?: number
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          leads?: number
+          period?: string
+          revenue?: number
+          sla_percent?: number
+          tickets?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchise_performance_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      franchise_royalties: {
+        Row: {
+          commission_due: number
+          created_at: string
+          due_date: string | null
+          franchise: string
+          franchise_id: string | null
+          gross_sales: number
+          id: string
+          paid_amount: number
+          paid_at: string | null
+          period: string
+          royalty_due: number
+          royalty_rate: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          commission_due?: number
+          created_at?: string
+          due_date?: string | null
+          franchise?: string
+          franchise_id?: string | null
+          gross_sales?: number
+          id?: string
+          paid_amount?: number
+          paid_at?: string | null
+          period: string
+          royalty_due?: number
+          royalty_rate?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          commission_due?: number
+          created_at?: string
+          due_date?: string | null
+          franchise?: string
+          franchise_id?: string | null
+          gross_sales?: number
+          id?: string
+          paid_amount?: number
+          paid_at?: string | null
+          period?: string
+          royalty_due?: number
+          royalty_rate?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchise_royalties_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       franchises: {
         Row: {
           city: string
