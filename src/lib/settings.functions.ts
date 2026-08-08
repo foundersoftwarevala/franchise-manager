@@ -15,7 +15,7 @@ export const listSettings = createServerFn({ method: "GET" }).handler(async () =
     label: s.label,
     description: s.description,
     category: s.category,
-    value: s.value as unknown,
+    value: JSON.stringify(s.value ?? null),
     updatedAt: (s.updated_at ?? "").slice(0, 10),
   }));
 });
