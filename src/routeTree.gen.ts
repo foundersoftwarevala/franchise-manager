@@ -28,6 +28,7 @@ import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DirectoryRouteImport } from './routes/directory'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CountriesRouteImport } from './routes/countries'
+import { Route as ContractsRouteImport } from './routes/contracts'
 import { Route as ComplianceRouteImport } from './routes/compliance'
 import { Route as CommunicationRouteImport } from './routes/communication'
 import { Route as CommissionRouteImport } from './routes/commission'
@@ -130,6 +131,11 @@ const CountriesRoute = CountriesRouteImport.update({
   path: '/countries',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContractsRoute = ContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ComplianceRoute = ComplianceRouteImport.update({
   id: '/compliance',
   path: '/compliance',
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/commission': typeof CommissionRoute
   '/communication': typeof CommunicationRoute
   '/compliance': typeof ComplianceRoute
+  '/contracts': typeof ContractsRoute
   '/countries': typeof CountriesRoute
   '/dashboard': typeof DashboardRoute
   '/directory': typeof DirectoryRoute
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/commission': typeof CommissionRoute
   '/communication': typeof CommunicationRoute
   '/compliance': typeof ComplianceRoute
+  '/contracts': typeof ContractsRoute
   '/countries': typeof CountriesRoute
   '/dashboard': typeof DashboardRoute
   '/directory': typeof DirectoryRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/commission': typeof CommissionRoute
   '/communication': typeof CommunicationRoute
   '/compliance': typeof ComplianceRoute
+  '/contracts': typeof ContractsRoute
   '/countries': typeof CountriesRoute
   '/dashboard': typeof DashboardRoute
   '/directory': typeof DirectoryRoute
@@ -252,6 +261,7 @@ export interface FileRouteTypes {
     | '/commission'
     | '/communication'
     | '/compliance'
+    | '/contracts'
     | '/countries'
     | '/dashboard'
     | '/directory'
@@ -279,6 +289,7 @@ export interface FileRouteTypes {
     | '/commission'
     | '/communication'
     | '/compliance'
+    | '/contracts'
     | '/countries'
     | '/dashboard'
     | '/directory'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/commission'
     | '/communication'
     | '/compliance'
+    | '/contracts'
     | '/countries'
     | '/dashboard'
     | '/directory'
@@ -334,6 +346,7 @@ export interface RootRouteChildren {
   CommissionRoute: typeof CommissionRoute
   CommunicationRoute: typeof CommunicationRoute
   ComplianceRoute: typeof ComplianceRoute
+  ContractsRoute: typeof ContractsRoute
   CountriesRoute: typeof CountriesRoute
   DashboardRoute: typeof DashboardRoute
   DirectoryRoute: typeof DirectoryRoute
@@ -490,6 +503,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CountriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contracts': {
+      id: '/contracts'
+      path: '/contracts'
+      fullPath: '/contracts'
+      preLoaderRoute: typeof ContractsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/compliance': {
       id: '/compliance'
       path: '/compliance'
@@ -542,6 +562,7 @@ const rootRouteChildren: RootRouteChildren = {
   CommissionRoute: CommissionRoute,
   CommunicationRoute: CommunicationRoute,
   ComplianceRoute: ComplianceRoute,
+  ContractsRoute: ContractsRoute,
   CountriesRoute: CountriesRoute,
   DashboardRoute: DashboardRoute,
   DirectoryRoute: DirectoryRoute,
