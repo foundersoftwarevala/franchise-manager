@@ -238,7 +238,7 @@ function DocumentsWall() {
                 </div>
               </Card>
             ) : (
-              <EnterpriseTable<StoredDocument>
+              <EnterpriseTable<VaultDoc>
                 columns={columns}
                 rows={rows}
                 emptyTitle="No documents"
@@ -248,6 +248,75 @@ function DocumentsWall() {
           </div>
         </Section>
       </WallBody>
+
+      <Modal
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        title="Upload to document vault"
+        description="Files are stored privately and opened through a time-limited secure link."
+        icon={<Upload className="h-4 w-4" />}
+        footer={
+          <div className="flex justify-end gap-2">
+            <Btn onClick={() => setUploadOpen(false)}>Cancel</Btn>
+            <Btn variant="primary" loading={upload.isPending} onClick={submitUpload}>
+              Upload
+            </Btn>
+          </div>
+        }
+      >
+        <div className="space-y-3">
+          <label className="block space-y-1">
+            <span className="text-[11.5px] font-medium text-muted-foreground">Files</span>
+            <input
+              type="file"
+              multiple
+              onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
+              className="w-full rounded-md border border-border bg-surface px-2.5 py-2 text-[12.5px] text-foreground file:mr-2 file:rounded file:border-0 file:bg-surface-2 file:px-2 file:py-1 file:text-[11.5px] file:text-foreground"
+            />
+          </label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block space-y-1">
+              <span className="text-[11.5px] font-medium text-muted-foreground">Category</span>
+              <select
+                value={uCategory}
+                onChange={(e) => setUCategory(e.target.value as "kyc" | "compliance")}
+                className="h-9 w-full rounded-md border border-border bg-surface px-2 text-[12.5px] text-foreground"
+              >
+                <option value="kyc">KYC</option>
+                <option value="compliance">Compliance</option>
+              </select>
+            </label>
+            <label className="block space-y-1">
+              <span className="text-[11.5px] font-medium text-muted-foreground">Kind</span>
+              <select
+                value={uKind}
+                onChange={(e) => setUKind(e.target.value)}
+                className="h-9 w-full rounded-md border border-border bg-surface px-2 text-[12.5px] text-foreground"
+              >
+                <option value="pan">PAN</option>
+                <option value="gst">GST</option>
+                <option value="agreement">Agreement</option>
+                <option value="bank_proof">Bank proof</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+          </div>
+          <label className="block space-y-1">
+            <span className="text-[11.5px] font-medium text-muted-foreground">Franchise (optional)</span>
+            <input
+              value={uFranchise}
+              onChange={(e) => setUFranchise(e.target.value)}
+              placeholder="e.g. Bharat Retail Group"
+              className="h-9 w-full rounded-md border border-border bg-surface px-2.5 text-[12.5px] text-foreground placeholder:text-muted-foreground"
+            />
+          </label>
+          {files.length > 0 && (
+            <p className="text-[11.5px] text-muted-foreground">
+              {files.length} file(s) · {(files.reduce((s, f) => s + f.size, 0) / 1024).toFixed(0)} KB total
+            </p>
+          )}
+        </div>
+      </Modal>
     </>
   );
 }
