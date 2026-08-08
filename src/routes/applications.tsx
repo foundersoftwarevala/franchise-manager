@@ -229,7 +229,7 @@ function ApplicationsWall() {
                         description: `${active.company} approved — franchise record created.`,
                         tone: "success",
                       });
-                      void res;
+                      
                       setOpenId(null);
                     },
                     onError: (e: Error) =>
