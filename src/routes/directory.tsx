@@ -414,6 +414,81 @@ function DirectoryWall() {
           </div>
         )}
       </RightPanel>
+
+      <Modal
+        open={controlsOpen}
+        onClose={() => setControlsOpen(false)}
+        title="Commercial controls"
+        description={active ? `${active.company} · ${active.code}` : undefined}
+        footer={
+          <div className="flex items-center justify-end gap-2">
+            <Btn variant="ghost" onClick={() => setControlsOpen(false)}>Cancel</Btn>
+            <Btn
+              variant="primary"
+              disabled={saveControls.isPending || !active}
+              onClick={() => {
+                if (!active) return;
+                const royaltyRate = Number(controls.royaltyRate);
+                const pricingVariation = Number(controls.pricingVariation);
+                if (!Number.isFinite(royaltyRate) || royaltyRate < 0 || royaltyRate > 100) {
+                  toast({ title: "Invalid royalty rate", description: "Enter a percentage between 0 and 100.", tone: "destructive" });
+                  return;
+                }
+                if (!Number.isFinite(pricingVariation) || pricingVariation < 0 || pricingVariation > 100) {
+                  toast({ title: "Invalid pricing variation", description: "Enter a percentage between 0 and 100.", tone: "destructive" });
+                  return;
+                }
+                saveControls.mutate(
+                  { id: active.id, royaltyRate, pricingVariation, leadRouting: controls.leadRouting },
+                  {
+                    onSuccess: () => {
+                      toast({ title: "Controls updated", description: `${active.company} saved with audit entry.`, tone: "success" });
+                      setControlsOpen(false);
+                    },
+                    onError: (e: Error) => toast({ title: "Update failed", description: e.message, tone: "destructive" }),
+                  },
+                );
+              }}
+            >
+              {saveControls.isPending ? "Saving…" : "Save controls"}
+            </Btn>
+          </div>
+        }
+      >
+        <div className="space-y-3">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block">
+              <span className="text-[11.5px] font-medium text-muted-foreground">Royalty rate (%)</span>
+              <input
+                type="number" min={0} max={100} step={0.5}
+                value={controls.royaltyRate}
+                onChange={(e) => setControls((c) => ({ ...c, royaltyRate: e.target.value }))}
+                className="mt-1 w-full rounded-lg border border-border bg-background/60 px-2.5 py-2 text-[13px] text-foreground outline-none focus:border-primary"
+              />
+            </label>
+            <label className="block">
+              <span className="text-[11.5px] font-medium text-muted-foreground">Pricing variation allowed (±%)</span>
+              <input
+                type="number" min={0} max={100} step={0.5}
+                value={controls.pricingVariation}
+                onChange={(e) => setControls((c) => ({ ...c, pricingVariation: e.target.value }))}
+                className="mt-1 w-full rounded-lg border border-border bg-background/60 px-2.5 py-2 text-[13px] text-foreground outline-none focus:border-primary"
+              />
+            </label>
+          </div>
+          <label className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-2 px-3 py-2.5">
+            <input
+              type="checkbox"
+              checked={controls.leadRouting}
+              onChange={(e) => setControls((c) => ({ ...c, leadRouting: e.target.checked }))}
+              className="h-4 w-4 accent-[color:var(--color-primary)]"
+            />
+            <span className="text-[12.5px] text-foreground">
+              Route inbound territory leads to this franchise
+            </span>
+          </label>
+        </div>
+      </Modal>
     </>
   );
 }
