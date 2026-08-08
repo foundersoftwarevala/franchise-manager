@@ -16,11 +16,23 @@ export const Route = createFileRoute("/documents")({
 
 const CATEGORIES = ["all", "kyc", "compliance"] as const;
 
+type VaultDoc = StoredDocument & { storagePath?: string | null };
+
 function DocumentsWall() {
   const local = useDocuments();
   const { data: stored = [] } = useDocumentRecords();
-  const documents = useMemo<StoredDocument[]>(() => {
-    const fromDb: StoredDocument[] = stored.map((d) => ({
+  const upload = useUploadDocuments();
+  const link = useDocumentLink();
+  const { toast } = useToast();
+
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const [uCategory, setUCategory] = useState<"kyc" | "compliance">("kyc");
+  const [uKind, setUKind] = useState("other");
+  const [uFranchise, setUFranchise] = useState("");
+
+  const documents = useMemo<VaultDoc[]>(() => {
+    const fromDb: VaultDoc[] = stored.map((d) => ({
       id: d.id,
       name: d.name,
       size: d.size,
@@ -31,8 +43,9 @@ function DocumentsWall() {
       targetId: d.targetId,
       targetLabel: d.targetLabel,
       franchise: d.franchise ?? undefined,
-      uploadedBy: "—",
+      uploadedBy: d.uploadedBy,
       uploadedAt: d.uploadedAt,
+      storagePath: d.storagePath,
       status:
         d.status === "verified"
           ? "verified"
