@@ -210,10 +210,33 @@ function ApplicationsWall() {
             </Btn>
             <Btn
               variant="primary"
-              disabled={!canApprove}
-              onClick={() => { toast({ title: "Approval recorded", tone: "success" }); setOpenId(null); }}
+              disabled={!canApprove || approve.isPending || !active}
+              title={
+                active && (!active.kycVerified || !active.paymentVerified)
+                  ? "KYC and payment must be verified before approval"
+                  : undefined
+              }
+              onClick={() => {
+                if (!active) return;
+                approve.mutate(
+                  { id: active.id },
+                  {
+                    onSuccess: (res) => {
+                      toast({
+                        title: "Application approved",
+                        description: `${active.company} approved — franchise record created.`,
+                        tone: "success",
+                      });
+                      void res;
+                      setOpenId(null);
+                    },
+                    onError: (e: Error) =>
+                      toast({ title: "Approval blocked", description: e.message, tone: "destructive" }),
+                  },
+                );
+              }}
             >
-              <CheckCircle2 className="h-3.5 w-3.5" /> Approve & Advance
+              <CheckCircle2 className="h-3.5 w-3.5" /> {approve.isPending ? "Approving…" : "Approve & Advance"}
             </Btn>
           </div>
         }
