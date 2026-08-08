@@ -198,9 +198,11 @@ export type Database = {
           scope: string
           size: number
           status: string
+          storage_path: string | null
           target_id: string
           target_label: string
           uploaded_at: string
+          uploaded_by: string
         }
         Insert: {
           category?: string
@@ -212,9 +214,11 @@ export type Database = {
           scope?: string
           size?: number
           status?: string
+          storage_path?: string | null
           target_id?: string
           target_label?: string
           uploaded_at?: string
+          uploaded_by?: string
         }
         Update: {
           category?: string
@@ -226,9 +230,11 @@ export type Database = {
           scope?: string
           size?: number
           status?: string
+          storage_path?: string | null
           target_id?: string
           target_label?: string
           uploaded_at?: string
+          uploaded_by?: string
         }
         Relationships: []
       }
