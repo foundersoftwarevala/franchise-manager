@@ -150,12 +150,42 @@ function DocumentsWall() {
     },
   ];
 
+  const submitUpload = () => {
+    if (files.length === 0) {
+      toast({ title: "Choose a file", description: "Select at least one file to upload.", tone: "warning" });
+      return;
+    }
+    upload.mutate(
+      {
+        files,
+        category: uCategory,
+        kind: uKind,
+        franchise: uFranchise || null,
+        targetLabel: uFranchise || "Network",
+      },
+      {
+        onSuccess: (paths) => {
+          toast({ title: "Upload complete", description: `${paths.length} file(s) stored in the vault.`, tone: "success" });
+          setFiles([]);
+          setUFranchise("");
+          setUploadOpen(false);
+        },
+        onError: (e: Error) => toast({ title: "Upload failed", description: e.message, tone: "destructive" }),
+      },
+    );
+  };
+
   return (
     <>
       <WallHeader
         eyebrow="Documents"
         title="Document Vault"
         description="Every KYC and compliance file uploaded through License creation and renewal, linked to its exact record."
+        actions={
+          <Btn variant="primary" onClick={() => setUploadOpen(true)}>
+            <Upload className="h-3.5 w-3.5" /> Upload document
+          </Btn>
+        }
       />
       <WallBody>
         <div className="wall-grid">
