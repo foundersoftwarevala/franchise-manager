@@ -52,6 +52,9 @@ export type Franchise = {
   revenueMtd: number;
   healthScore: number;
   riskLevel: RiskLevel;
+  royaltyRate: number;
+  pricingVariation: number;
+  leadRouting: boolean;
 };
 
 export type Territory = {
@@ -196,6 +199,8 @@ export type DocumentRecord = {
   size: number;
   status: string;
   uploadedAt: string;
+  storagePath: string | null;
+  uploadedBy: string;
 };
 
 const STALE = 30_000;

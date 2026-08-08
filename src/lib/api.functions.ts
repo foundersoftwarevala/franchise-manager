@@ -28,6 +28,9 @@ export const listFranchises = createServerFn({ method: "GET" }).handler(async ()
     revenueMtd: Number(f.revenue_mtd),
     healthScore: f.health_score,
     riskLevel: f.risk_level,
+    royaltyRate: Number(f.royalty_rate ?? 0),
+    pricingVariation: Number(f.pricing_variation ?? 0),
+    leadRouting: Boolean(f.lead_routing),
   }));
 });
 
@@ -229,6 +232,8 @@ export const listDocuments = createServerFn({ method: "GET" }).handler(async () 
     size: doc.size,
     status: doc.status,
     uploadedAt: doc.uploaded_at,
+    storagePath: doc.storage_path ?? null,
+    uploadedBy: doc.uploaded_by ?? "—",
   }));
 });
 

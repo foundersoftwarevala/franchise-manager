@@ -13,19 +13,25 @@ import { Route as UsersRouteImport } from './routes/users'
 import { Route as TrainingRouteImport } from './routes/training'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RoyaltiesRouteImport } from './routes/royalties'
 import { Route as RevenueRouteImport } from './routes/revenue'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as RegionsRouteImport } from './routes/regions'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as PerformanceRouteImport } from './routes/performance'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as LicenseRouteImport } from './routes/license'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as LeadsRouteImport } from './routes/leads'
+import { Route as FraudRouteImport } from './routes/fraud'
+import { Route as EscalationsRouteImport } from './routes/escalations'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DirectoryRouteImport } from './routes/directory'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CountriesRouteImport } from './routes/countries'
+import { Route as ContractsRouteImport } from './routes/contracts'
 import { Route as ComplianceRouteImport } from './routes/compliance'
 import { Route as CommunicationRouteImport } from './routes/communication'
 import { Route as CommissionRouteImport } from './routes/commission'
@@ -53,6 +59,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoyaltiesRoute = RoyaltiesRouteImport.update({
+  id: '/royalties',
+  path: '/royalties',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RevenueRoute = RevenueRouteImport.update({
   id: '/revenue',
   path: '/revenue',
@@ -73,9 +84,19 @@ const ProductsRoute = ProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PerformanceRoute = PerformanceRouteImport.update({
+  id: '/performance',
+  path: '/performance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketingRoute = MarketingRouteImport.update({
@@ -98,6 +119,16 @@ const LeadsRoute = LeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FraudRoute = FraudRouteImport.update({
+  id: '/fraud',
+  path: '/fraud',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EscalationsRoute = EscalationsRouteImport.update({
+  id: '/escalations',
+  path: '/escalations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DocumentsRoute = DocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
@@ -116,6 +147,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const CountriesRoute = CountriesRouteImport.update({
   id: '/countries',
   path: '/countries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContractsRoute = ContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComplianceRoute = ComplianceRouteImport.update({
@@ -156,19 +192,25 @@ export interface FileRoutesByFullPath {
   '/commission': typeof CommissionRoute
   '/communication': typeof CommunicationRoute
   '/compliance': typeof ComplianceRoute
+  '/contracts': typeof ContractsRoute
   '/countries': typeof CountriesRoute
   '/dashboard': typeof DashboardRoute
   '/directory': typeof DirectoryRoute
   '/documents': typeof DocumentsRoute
+  '/escalations': typeof EscalationsRoute
+  '/fraud': typeof FraudRoute
   '/leads': typeof LeadsRoute
   '/legal': typeof LegalRoute
   '/license': typeof LicenseRoute
   '/marketing': typeof MarketingRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/performance': typeof PerformanceRoute
   '/products': typeof ProductsRoute
   '/regions': typeof RegionsRoute
   '/reports': typeof ReportsRoute
   '/revenue': typeof RevenueRoute
+  '/royalties': typeof RoyaltiesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/training': typeof TrainingRoute
@@ -181,19 +223,25 @@ export interface FileRoutesByTo {
   '/commission': typeof CommissionRoute
   '/communication': typeof CommunicationRoute
   '/compliance': typeof ComplianceRoute
+  '/contracts': typeof ContractsRoute
   '/countries': typeof CountriesRoute
   '/dashboard': typeof DashboardRoute
   '/directory': typeof DirectoryRoute
   '/documents': typeof DocumentsRoute
+  '/escalations': typeof EscalationsRoute
+  '/fraud': typeof FraudRoute
   '/leads': typeof LeadsRoute
   '/legal': typeof LegalRoute
   '/license': typeof LicenseRoute
   '/marketing': typeof MarketingRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/performance': typeof PerformanceRoute
   '/products': typeof ProductsRoute
   '/regions': typeof RegionsRoute
   '/reports': typeof ReportsRoute
   '/revenue': typeof RevenueRoute
+  '/royalties': typeof RoyaltiesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/training': typeof TrainingRoute
@@ -207,19 +255,25 @@ export interface FileRoutesById {
   '/commission': typeof CommissionRoute
   '/communication': typeof CommunicationRoute
   '/compliance': typeof ComplianceRoute
+  '/contracts': typeof ContractsRoute
   '/countries': typeof CountriesRoute
   '/dashboard': typeof DashboardRoute
   '/directory': typeof DirectoryRoute
   '/documents': typeof DocumentsRoute
+  '/escalations': typeof EscalationsRoute
+  '/fraud': typeof FraudRoute
   '/leads': typeof LeadsRoute
   '/legal': typeof LegalRoute
   '/license': typeof LicenseRoute
   '/marketing': typeof MarketingRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/performance': typeof PerformanceRoute
   '/products': typeof ProductsRoute
   '/regions': typeof RegionsRoute
   '/reports': typeof ReportsRoute
   '/revenue': typeof RevenueRoute
+  '/royalties': typeof RoyaltiesRoute
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/training': typeof TrainingRoute
@@ -234,19 +288,25 @@ export interface FileRouteTypes {
     | '/commission'
     | '/communication'
     | '/compliance'
+    | '/contracts'
     | '/countries'
     | '/dashboard'
     | '/directory'
     | '/documents'
+    | '/escalations'
+    | '/fraud'
     | '/leads'
     | '/legal'
     | '/license'
     | '/marketing'
+    | '/notifications'
     | '/onboarding'
+    | '/performance'
     | '/products'
     | '/regions'
     | '/reports'
     | '/revenue'
+    | '/royalties'
     | '/settings'
     | '/support'
     | '/training'
@@ -259,19 +319,25 @@ export interface FileRouteTypes {
     | '/commission'
     | '/communication'
     | '/compliance'
+    | '/contracts'
     | '/countries'
     | '/dashboard'
     | '/directory'
     | '/documents'
+    | '/escalations'
+    | '/fraud'
     | '/leads'
     | '/legal'
     | '/license'
     | '/marketing'
+    | '/notifications'
     | '/onboarding'
+    | '/performance'
     | '/products'
     | '/regions'
     | '/reports'
     | '/revenue'
+    | '/royalties'
     | '/settings'
     | '/support'
     | '/training'
@@ -284,19 +350,25 @@ export interface FileRouteTypes {
     | '/commission'
     | '/communication'
     | '/compliance'
+    | '/contracts'
     | '/countries'
     | '/dashboard'
     | '/directory'
     | '/documents'
+    | '/escalations'
+    | '/fraud'
     | '/leads'
     | '/legal'
     | '/license'
     | '/marketing'
+    | '/notifications'
     | '/onboarding'
+    | '/performance'
     | '/products'
     | '/regions'
     | '/reports'
     | '/revenue'
+    | '/royalties'
     | '/settings'
     | '/support'
     | '/training'
@@ -310,19 +382,25 @@ export interface RootRouteChildren {
   CommissionRoute: typeof CommissionRoute
   CommunicationRoute: typeof CommunicationRoute
   ComplianceRoute: typeof ComplianceRoute
+  ContractsRoute: typeof ContractsRoute
   CountriesRoute: typeof CountriesRoute
   DashboardRoute: typeof DashboardRoute
   DirectoryRoute: typeof DirectoryRoute
   DocumentsRoute: typeof DocumentsRoute
+  EscalationsRoute: typeof EscalationsRoute
+  FraudRoute: typeof FraudRoute
   LeadsRoute: typeof LeadsRoute
   LegalRoute: typeof LegalRoute
   LicenseRoute: typeof LicenseRoute
   MarketingRoute: typeof MarketingRoute
+  NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
+  PerformanceRoute: typeof PerformanceRoute
   ProductsRoute: typeof ProductsRoute
   RegionsRoute: typeof RegionsRoute
   ReportsRoute: typeof ReportsRoute
   RevenueRoute: typeof RevenueRoute
+  RoyaltiesRoute: typeof RoyaltiesRoute
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
   TrainingRoute: typeof TrainingRoute
@@ -359,6 +437,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/royalties': {
+      id: '/royalties'
+      path: '/royalties'
+      fullPath: '/royalties'
+      preLoaderRoute: typeof RoyaltiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/revenue': {
       id: '/revenue'
       path: '/revenue'
@@ -387,11 +472,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/performance': {
+      id: '/performance'
+      path: '/performance'
+      fullPath: '/performance'
+      preLoaderRoute: typeof PerformanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marketing': {
@@ -422,6 +521,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fraud': {
+      id: '/fraud'
+      path: '/fraud'
+      fullPath: '/fraud'
+      preLoaderRoute: typeof FraudRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/escalations': {
+      id: '/escalations'
+      path: '/escalations'
+      fullPath: '/escalations'
+      preLoaderRoute: typeof EscalationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/documents': {
       id: '/documents'
       path: '/documents'
@@ -448,6 +561,13 @@ declare module '@tanstack/react-router' {
       path: '/countries'
       fullPath: '/countries'
       preLoaderRoute: typeof CountriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contracts': {
+      id: '/contracts'
+      path: '/contracts'
+      fullPath: '/contracts'
+      preLoaderRoute: typeof ContractsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compliance': {
@@ -502,19 +622,25 @@ const rootRouteChildren: RootRouteChildren = {
   CommissionRoute: CommissionRoute,
   CommunicationRoute: CommunicationRoute,
   ComplianceRoute: ComplianceRoute,
+  ContractsRoute: ContractsRoute,
   CountriesRoute: CountriesRoute,
   DashboardRoute: DashboardRoute,
   DirectoryRoute: DirectoryRoute,
   DocumentsRoute: DocumentsRoute,
+  EscalationsRoute: EscalationsRoute,
+  FraudRoute: FraudRoute,
   LeadsRoute: LeadsRoute,
   LegalRoute: LegalRoute,
   LicenseRoute: LicenseRoute,
   MarketingRoute: MarketingRoute,
+  NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
+  PerformanceRoute: PerformanceRoute,
   ProductsRoute: ProductsRoute,
   RegionsRoute: RegionsRoute,
   ReportsRoute: ReportsRoute,
   RevenueRoute: RevenueRoute,
+  RoyaltiesRoute: RoyaltiesRoute,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
   TrainingRoute: TrainingRoute,
@@ -523,13 +649,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

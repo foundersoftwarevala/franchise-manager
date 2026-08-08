@@ -14,6 +14,7 @@ import {
 import { useApplications, type Application } from "@/lib/data-hooks";
 import { useCan } from "@/lib/session";
 import { useToast } from "@/lib/toast";
+import { useApproveApplication } from "@/lib/settings-hooks";
 import { useShortcuts } from "@/lib/shortcuts";
 import { CheckCircle2, Plus, UserCog, XCircle } from "lucide-react";
 
@@ -32,6 +33,7 @@ function ApplicationsWall() {
   const canApprove = useCan("application.approve");
   const canReject = useCan("application.reject");
   const { toast } = useToast();
+  const approve = useApproveApplication();
 
   const [tab, setTab] = useState<ApplicationStage | "all">("all");
   const [search, setSearch] = useState("");
@@ -210,10 +212,33 @@ function ApplicationsWall() {
             </Btn>
             <Btn
               variant="primary"
-              disabled={!canApprove}
-              onClick={() => { toast({ title: "Approval recorded", tone: "success" }); setOpenId(null); }}
+              disabled={!canApprove || approve.isPending || !active}
+              title={
+                active && (!active.kycVerified || !active.paymentVerified)
+                  ? "KYC and payment must be verified before approval"
+                  : undefined
+              }
+              onClick={() => {
+                if (!active) return;
+                approve.mutate(
+                  { id: active.id },
+                  {
+                    onSuccess: () => {
+                      toast({
+                        title: "Application approved",
+                        description: `${active.company} approved — franchise record created.`,
+                        tone: "success",
+                      });
+                      
+                      setOpenId(null);
+                    },
+                    onError: (e: Error) =>
+                      toast({ title: "Approval blocked", description: e.message, tone: "destructive" }),
+                  },
+                );
+              }}
             >
-              <CheckCircle2 className="h-3.5 w-3.5" /> Approve & Advance
+              <CheckCircle2 className="h-3.5 w-3.5" /> {approve.isPending ? "Approving…" : "Approve & Advance"}
             </Btn>
           </div>
         }

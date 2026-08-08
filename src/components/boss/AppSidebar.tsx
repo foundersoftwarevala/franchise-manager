@@ -1,7 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
+  AlertTriangle,
   Award,
+  Bell,
+  FileSignature,
+  Gauge,
+  Receipt,
+  ShieldAlert,
   BarChart3,
   BookOpen,
   Briefcase,
@@ -60,6 +66,8 @@ const GROUPS: { label: string; items: NavItem[] }[] = [
     items: [
       { to: "/revenue", label: "Revenue", icon: Wallet },
       { to: "/commission", label: "Commission", icon: Coins },
+      { to: "/royalties", label: "Royalties", icon: Receipt },
+      { to: "/contracts", label: "Contracts", icon: FileSignature },
       { to: "/products", label: "Products", icon: Package },
       { to: "/license", label: "License", icon: Award },
     ],
@@ -67,10 +75,13 @@ const GROUPS: { label: string; items: NavItem[] }[] = [
   {
     label: "Operations",
     items: [
+      { to: "/performance", label: "Performance", icon: Gauge },
       { to: "/users", label: "Users", icon: Users },
       { to: "/support", label: "Support", icon: LifeBuoy },
+      { to: "/escalations", label: "Escalations", icon: AlertTriangle },
       { to: "/training", label: "Training", icon: BookOpen },
       { to: "/compliance", label: "Compliance", icon: ShieldCheck },
+      { to: "/fraud", label: "Fraud & Risk", icon: ShieldAlert },
       { to: "/legal", label: "Legal", icon: Gavel },
     ],
   },
@@ -80,6 +91,7 @@ const GROUPS: { label: string; items: NavItem[] }[] = [
       { to: "/marketing", label: "Marketing", icon: Megaphone },
       { to: "/documents", label: "Documents", icon: FileText },
       { to: "/communication", label: "Communication", icon: MessageSquare },
+      { to: "/notifications", label: "Notifications", icon: Bell },
       { to: "/analytics", label: "Analytics", icon: BarChart3 },
       { to: "/reports", label: "Reports", icon: FileText },
       { to: "/settings", label: "Settings", icon: Settings },

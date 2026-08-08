@@ -7,7 +7,11 @@ import { StatusBadge } from "@/components/boss/StatusBadge";
 import { ExportMenu } from "@/components/boss/ExportMenu";
 import { useDocuments, type StoredDocument } from "@/lib/approvals";
 import { useDocumentRecords } from "@/lib/data-hooks";
-import { FileText } from "lucide-react";
+import { useDocumentLink, useUploadDocuments } from "@/lib/documents-hooks";
+import { useToast } from "@/lib/toast";
+import { Btn } from "@/components/boss/Wall";
+import { Modal } from "@/components/boss/Modal";
+import { ExternalLink, FileText, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/documents")({
   head: () => ({ meta: [{ title: "Documents · Boss Panel" }] }),
@@ -16,11 +20,23 @@ export const Route = createFileRoute("/documents")({
 
 const CATEGORIES = ["all", "kyc", "compliance"] as const;
 
+type VaultDoc = StoredDocument & { storagePath?: string | null };
+
 function DocumentsWall() {
   const local = useDocuments();
   const { data: stored = [] } = useDocumentRecords();
-  const documents = useMemo<StoredDocument[]>(() => {
-    const fromDb: StoredDocument[] = stored.map((d) => ({
+  const upload = useUploadDocuments();
+  const link = useDocumentLink();
+  const { toast } = useToast();
+
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const [uCategory, setUCategory] = useState<"kyc" | "compliance">("kyc");
+  const [uKind, setUKind] = useState("other");
+  const [uFranchise, setUFranchise] = useState("");
+
+  const documents = useMemo<VaultDoc[]>(() => {
+    const fromDb: VaultDoc[] = stored.map((d) => ({
       id: d.id,
       name: d.name,
       size: d.size,
@@ -31,8 +47,9 @@ function DocumentsWall() {
       targetId: d.targetId,
       targetLabel: d.targetLabel,
       franchise: d.franchise ?? undefined,
-      uploadedBy: "—",
+      uploadedBy: d.uploadedBy,
       uploadedAt: d.uploadedAt,
+      storagePath: d.storagePath,
       status:
         d.status === "verified"
           ? "verified"
@@ -72,7 +89,21 @@ function DocumentsWall() {
     [documents],
   );
 
-  const columns: Column<StoredDocument>[] = [
+  const openFile = (d: VaultDoc) => {
+    if (!d.storagePath) {
+      toast({ title: "No stored file", description: "This record has no file in the vault yet.", tone: "warning" });
+      return;
+    }
+    link.mutate(
+      { storagePath: d.storagePath },
+      {
+        onSuccess: (res) => window.open(res.url, "_blank", "noopener,noreferrer"),
+        onError: (e: Error) => toast({ title: "Could not open file", description: e.message, tone: "destructive" }),
+      },
+    );
+  };
+
+  const columns: Column<VaultDoc>[] = [
     {
       id: "name",
       header: "Document",
@@ -99,9 +130,50 @@ function DocumentsWall() {
       ),
     },
     { id: "size", header: "Size", cell: (d) => <span className="text-muted-foreground">{(d.size / 1024).toFixed(0)} KB</span> },
+    { id: "uploadedBy", header: "Uploaded by", cell: (d) => <span className="text-muted-foreground">{d.uploadedBy}</span> },
     { id: "uploadedAt", header: "Uploaded", cell: (d) => <span className="text-muted-foreground">{d.uploadedAt}</span> },
     { id: "status", header: "Status", cell: (d) => <StatusBadge status={d.status === "verified" ? "approved" : d.status === "pending_review" ? "pending" : "issued"}>{d.status.replace("_", " ")}</StatusBadge> },
+    {
+      id: "file",
+      header: "File",
+      cell: (d) =>
+        d.storagePath ? (
+          <button
+            onClick={(e) => { e.stopPropagation(); openFile(d); }}
+            className="inline-flex items-center gap-1 text-[11.5px] text-primary hover:underline"
+          >
+            <ExternalLink className="h-3.5 w-3.5" /> Open
+          </button>
+        ) : (
+          <span className="text-[11.5px] text-muted-foreground">—</span>
+        ),
+    },
   ];
+
+  const submitUpload = () => {
+    if (files.length === 0) {
+      toast({ title: "Choose a file", description: "Select at least one file to upload.", tone: "warning" });
+      return;
+    }
+    upload.mutate(
+      {
+        files,
+        category: uCategory,
+        kind: uKind,
+        franchise: uFranchise || null,
+        targetLabel: uFranchise || "Network",
+      },
+      {
+        onSuccess: (paths) => {
+          toast({ title: "Upload complete", description: `${paths.length} file(s) stored in the vault.`, tone: "success" });
+          setFiles([]);
+          setUFranchise("");
+          setUploadOpen(false);
+        },
+        onError: (e: Error) => toast({ title: "Upload failed", description: e.message, tone: "destructive" }),
+      },
+    );
+  };
 
   return (
     <>
@@ -109,6 +181,11 @@ function DocumentsWall() {
         eyebrow="Documents"
         title="Document Vault"
         description="Every KYC and compliance file uploaded through License creation and renewal, linked to its exact record."
+        actions={
+          <Btn variant="primary" onClick={() => setUploadOpen(true)}>
+            <Upload className="h-3.5 w-3.5" /> Upload document
+          </Btn>
+        }
       />
       <WallBody>
         <div className="wall-grid">
@@ -161,7 +238,7 @@ function DocumentsWall() {
                 </div>
               </Card>
             ) : (
-              <EnterpriseTable<StoredDocument>
+              <EnterpriseTable<VaultDoc>
                 columns={columns}
                 rows={rows}
                 emptyTitle="No documents"
@@ -171,6 +248,75 @@ function DocumentsWall() {
           </div>
         </Section>
       </WallBody>
+
+      <Modal
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        title="Upload to document vault"
+        description="Files are stored privately and opened through a time-limited secure link."
+        icon={<Upload className="h-4 w-4" />}
+        footer={
+          <div className="flex justify-end gap-2">
+            <Btn onClick={() => setUploadOpen(false)}>Cancel</Btn>
+            <Btn variant="primary" loading={upload.isPending} onClick={submitUpload}>
+              Upload
+            </Btn>
+          </div>
+        }
+      >
+        <div className="space-y-3">
+          <label className="block space-y-1">
+            <span className="text-[11.5px] font-medium text-muted-foreground">Files</span>
+            <input
+              type="file"
+              multiple
+              onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
+              className="w-full rounded-md border border-border bg-surface px-2.5 py-2 text-[12.5px] text-foreground file:mr-2 file:rounded file:border-0 file:bg-surface-2 file:px-2 file:py-1 file:text-[11.5px] file:text-foreground"
+            />
+          </label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block space-y-1">
+              <span className="text-[11.5px] font-medium text-muted-foreground">Category</span>
+              <select
+                value={uCategory}
+                onChange={(e) => setUCategory(e.target.value as "kyc" | "compliance")}
+                className="h-9 w-full rounded-md border border-border bg-surface px-2 text-[12.5px] text-foreground"
+              >
+                <option value="kyc">KYC</option>
+                <option value="compliance">Compliance</option>
+              </select>
+            </label>
+            <label className="block space-y-1">
+              <span className="text-[11.5px] font-medium text-muted-foreground">Kind</span>
+              <select
+                value={uKind}
+                onChange={(e) => setUKind(e.target.value)}
+                className="h-9 w-full rounded-md border border-border bg-surface px-2 text-[12.5px] text-foreground"
+              >
+                <option value="pan">PAN</option>
+                <option value="gst">GST</option>
+                <option value="agreement">Agreement</option>
+                <option value="bank_proof">Bank proof</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+          </div>
+          <label className="block space-y-1">
+            <span className="text-[11.5px] font-medium text-muted-foreground">Franchise (optional)</span>
+            <input
+              value={uFranchise}
+              onChange={(e) => setUFranchise(e.target.value)}
+              placeholder="e.g. Bharat Retail Group"
+              className="h-9 w-full rounded-md border border-border bg-surface px-2.5 text-[12.5px] text-foreground placeholder:text-muted-foreground"
+            />
+          </label>
+          {files.length > 0 && (
+            <p className="text-[11.5px] text-muted-foreground">
+              {files.length} file(s) · {(files.reduce((s, f) => s + f.size, 0) / 1024).toFixed(0)} KB total
+            </p>
+          )}
+        </div>
+      </Modal>
     </>
   );
 }
