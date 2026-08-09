@@ -93,6 +93,11 @@ export const STATUS_TONE: Record<
 > = {
   active: "success",
   pending: "warning",
+  // Compliance statuses
+  compliant: "success",
+  warned: "warning",
+  escalated: "destructive",
+  breach: "destructive",
   onboarding: "info",
   suspended: "destructive",
   cancelled: "neutral",

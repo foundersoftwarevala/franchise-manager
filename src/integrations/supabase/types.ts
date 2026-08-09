@@ -69,6 +69,9 @@ export type Database = {
           at: string
           id: string
           meta: string | null
+          new_value: string | null
+          old_value: string | null
+          result: string
           scope: string
           target: string
         }
@@ -78,6 +81,9 @@ export type Database = {
           at?: string
           id?: string
           meta?: string | null
+          new_value?: string | null
+          old_value?: string | null
+          result?: string
           scope?: string
           target?: string
         }
@@ -87,6 +93,9 @@ export type Database = {
           at?: string
           id?: string
           meta?: string | null
+          new_value?: string | null
+          old_value?: string | null
+          result?: string
           scope?: string
           target?: string
         }
@@ -237,6 +246,59 @@ export type Database = {
           uploaded_by?: string
         }
         Relationships: []
+      }
+      franchise_compliance: {
+        Row: {
+          category: string
+          created_at: string
+          due_date: string | null
+          franchise: string
+          franchise_id: string | null
+          id: string
+          last_checked: string | null
+          notes: string | null
+          requirement: string
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          due_date?: string | null
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          last_checked?: string | null
+          notes?: string | null
+          requirement: string
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          due_date?: string | null
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          last_checked?: string | null
+          notes?: string | null
+          requirement?: string
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "franchise_compliance_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       franchise_contracts: {
         Row: {
