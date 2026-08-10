@@ -256,7 +256,10 @@ export function AppSidebar({
         </div>
       )}
 
-      <nav className="flex-1 space-y-3 overflow-y-auto px-2 py-3">
+      <nav
+        className="flex-1 space-y-3 overflow-y-auto px-2 py-3"
+        aria-label="Franchise manager modules"
+      >
         <div className="space-y-0.5">
           {PRIMARY.map((item) => (
             <ItemLink key={item.to} item={item} />
@@ -277,24 +280,33 @@ export function AppSidebar({
           return (
             <div key={group.label}>
               <button
+                data-nav-group="true"
                 onClick={() => setOpenGroups((s) => ({ ...s, [group.label]: !open }))}
+                onKeyDown={onNavKeyDown}
                 aria-expanded={open}
-                className="flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
+                className="flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-background)]"
               >
                 {group.label}
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
               </button>
-              {open && (
-                <div className="mt-0.5 space-y-0.5">
-                  {group.items.map((item) => (
-                    <ItemLink key={item.to} item={item} />
-                  ))}
+              <div
+                className={`grid transition-all duration-200 ease-out ${
+                  open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="mt-0.5 space-y-0.5">
+                    {group.items.map((item) => (
+                      <ItemLink key={item.to} item={item} />
+                    ))}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           );
         })}
       </nav>
+
     </div>
   );
 
