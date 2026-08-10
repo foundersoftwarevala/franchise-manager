@@ -68,6 +68,27 @@ function DashboardWall() {
     licensesQ.isLoading ||
     invoicesQ.isLoading ||
     commissionsQ.isLoading;
+  const loadError =
+    franchisesQ.error ??
+    applicationsQ.error ??
+    territoriesQ.error ??
+    licensesQ.error ??
+    invoicesQ.error ??
+    commissionsQ.error ??
+    null;
+  const errorText = loadError ? (loadError as Error).message : null;
+  useErrorToast(loadError, "Dashboard data");
+
+  const retryAll = () => {
+    void franchisesQ.refetch();
+    void applicationsQ.refetch();
+    void territoriesQ.refetch();
+    void licensesQ.refetch();
+    void invoicesQ.refetch();
+    void commissionsQ.refetch();
+  };
+
+
 
 
   useShortcuts([
