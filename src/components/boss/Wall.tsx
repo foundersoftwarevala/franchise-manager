@@ -24,12 +24,13 @@ export function WallHeader({
           <div className="min-w-0">
             <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary-foreground/15 px-3 py-1 text-[11px] font-medium text-primary-foreground backdrop-blur-sm">
               <Sparkles className="h-3.5 w-3.5 shrink-0" />
-              <span>Boss Panel</span>
-              <ChevronRight className="h-3 w-3 opacity-70" />
-              <span>Franchise Manager</span>
-              {eyebrow && <ChevronRight className="h-3 w-3 opacity-70" />}
+              <span className="hidden sm:inline">Boss Panel</span>
+              <ChevronRight className="hidden h-3 w-3 opacity-70 sm:inline" />
+              <span className="whitespace-nowrap">Franchise Manager</span>
+              {eyebrow && <ChevronRight className="h-3 w-3 shrink-0 opacity-70" />}
               {eyebrow && <span className="truncate">{eyebrow}</span>}
             </div>
+
             <h1 className="mt-4 text-2xl font-semibold leading-tight text-primary-foreground sm:text-3xl lg:text-[34px]">
               {title}
             </h1>

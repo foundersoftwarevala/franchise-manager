@@ -105,6 +105,15 @@ export function TopBar({ onOpenMenu }: { onOpenMenu?: () => void }) {
           </button>
         </div>
 
+        <button
+          onClick={() => setPaletteOpen(true)}
+          aria-label="Search"
+          className="ml-auto grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-border text-muted-foreground transition-colors hover:text-foreground md:hidden"
+        >
+          <Search className="h-4 w-4" />
+        </button>
+
+
 
         <div ref={menuRef} className="ml-auto flex items-center gap-1.5">
           {/* Import */}

@@ -46,13 +46,27 @@ const usd = (n: number) =>
 
 function DashboardWall() {
   const { toast } = useToast();
-  const { data: franchises = [] } = useFranchises();
-  const { data: applications = [] } = useApplications();
-  const { data: territories = [] } = useTerritories();
-  const { data: licenses = [] } = useLicenses();
-  const { data: invoices = [] } = useInvoices();
-  const { data: commissions = [] } = useCommissions();
+  const franchisesQ = useFranchises();
+  const applicationsQ = useApplications();
+  const territoriesQ = useTerritories();
+  const licensesQ = useLicenses();
+  const invoicesQ = useInvoices();
+  const commissionsQ = useCommissions();
+  const { data: franchises = [] } = franchisesQ;
+  const { data: applications = [] } = applicationsQ;
+  const { data: territories = [] } = territoriesQ;
+  const { data: licenses = [] } = licensesQ;
+  const { data: invoices = [] } = invoicesQ;
+  const { data: commissions = [] } = commissionsQ;
   const { data: audit = [] } = useAuditTrail("global");
+  const loading =
+    franchisesQ.isLoading ||
+    applicationsQ.isLoading ||
+    territoriesQ.isLoading ||
+    licensesQ.isLoading ||
+    invoicesQ.isLoading ||
+    commissionsQ.isLoading;
+
 
   useShortcuts([
     {
@@ -122,38 +136,40 @@ function DashboardWall() {
       <WallBody>
         <Section title="Franchise Network">
           <div className="wall-grid">
-            <Stat label="Total Franchises" value={franchises.length || undefined} hint="Across all countries" />
-            <Stat label="Active" tone="success" value={byStatus("active") || undefined} />
-            <Stat label="Pending" tone="warning" value={byStatus("pending") || undefined} />
-            <Stat label="Suspended" tone="destructive" value={byStatus("suspended") || undefined} />
-            <Stat label="Cancelled" value={byStatus("cancelled") || undefined} />
-            <Stat label="Countries" value={new Set(franchises.map((f) => f.country)).size || undefined} />
-            <Stat label="States / Regions" value={new Set(territories.map((t) => t.region)).size || undefined} />
-            <Stat label="Applications" value={applications.length || undefined} />
+            <Stat loading={loading} label="Total Franchises" value={franchises.length || undefined} hint="Across all countries" />
+            <Stat loading={loading} label="Active" tone="success" value={byStatus("active") || undefined} />
+            <Stat loading={loading} label="Pending" tone="warning" value={byStatus("pending") || undefined} />
+            <Stat loading={loading} label="Suspended" tone="destructive" value={byStatus("suspended") || undefined} />
+            <Stat loading={loading} label="Cancelled" value={byStatus("cancelled") || undefined} />
+            <Stat loading={loading} label="Countries" value={new Set(franchises.map((f) => f.country)).size || undefined} />
+            <Stat loading={loading} label="States / Regions" value={new Set(territories.map((t) => t.region)).size || undefined} />
+            <Stat loading={loading} label="Applications" value={applications.length || undefined} />
           </div>
         </Section>
 
         <Section title="Revenue & Operations">
           <div className="wall-grid">
-            <Stat label="Monthly Revenue" tone="info" value={revenueMtd ? usd(revenueMtd) : undefined} />
-            <Stat label="Lifetime Revenue" tone="info" value={lifetime ? usd(lifetime) : undefined} />
-            <Stat label="Invoices" value={invoices.length || undefined} />
-            <Stat label="Products Assigned" value={franchises.reduce((a, f) => a + f.productsAssigned, 0) || undefined} />
+            <Stat loading={loading} label="Monthly Revenue" tone="info" value={revenueMtd ? usd(revenueMtd) : undefined} />
+            <Stat loading={loading} label="Lifetime Revenue" tone="info" value={lifetime ? usd(lifetime) : undefined} />
+            <Stat loading={loading} label="Invoices" value={invoices.length || undefined} />
+            <Stat loading={loading} label="Products Assigned" value={franchises.reduce((a, f) => a + f.productsAssigned, 0) || undefined} />
             <Stat
+              loading={loading}
               label="License Usage"
               value={licenses.length ? `${licenses.reduce((a, l) => a + l.devices, 0)} / ${licenses.reduce((a, l) => a + l.devicesMax, 0)}` : undefined}
             />
-            <Stat label="Renewal Due" tone="warning" value={renewalDue || undefined} />
+            <Stat loading={loading} label="Renewal Due" tone="warning" value={renewalDue || undefined} />
           </div>
         </Section>
 
         <Section title="Attention">
           <div className="wall-grid">
-            <Stat label="Overdue Invoices" value={invoices.filter((i) => i.status === "overdue").length || undefined} tone="destructive" />
-            <Stat label="Pending Approvals" tone="warning" value={pendingApprovals || undefined} />
-            <Stat label="Compliance Alerts" tone="destructive" value={complianceAlerts || undefined} />
+            <Stat loading={loading} label="Overdue Invoices" value={invoices.filter((i) => i.status === "overdue").length || undefined} tone="destructive" />
+            <Stat loading={loading} label="Pending Approvals" tone="warning" value={pendingApprovals || undefined} />
+            <Stat loading={loading} label="Compliance Alerts" tone="destructive" value={complianceAlerts || undefined} />
           </div>
         </Section>
+
 
         <Section title="At a Glance">
           <div className="grid gap-3 lg:grid-cols-3">
@@ -172,7 +188,19 @@ function DashboardWall() {
                 </Link>
               </div>
               <div className="mt-5 h-56">
+                {loading ? (
+                  <div className="flex h-full items-end gap-2 rounded-md border border-dashed border-border p-3">
+                    {[38, 55, 30, 68, 47, 80, 60, 72, 44, 88, 65, 76].map((h, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 animate-pulse rounded-t bg-surface-2"
+                        style={{ height: `${h}%` }}
+                      />
+                    ))}
+                  </div>
+                ) : (
                 <ResponsiveContainer width="100%" height="100%">
+
                   <AreaChart data={trend} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
                     <defs>
                       <linearGradient id="revFill" x1="0" y1="0" x2="0" y2="1">
@@ -196,16 +224,28 @@ function DashboardWall() {
                     <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" strokeWidth={2} fill="url(#revFill)" />
                   </AreaChart>
                 </ResponsiveContainer>
+                )}
               </div>
+
             </Card>
             <Card>
               <div className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Geographic Distribution
               </div>
-              {geo.length === 0 ? (
+              {loading ? (
+                <ul className="mt-5 space-y-3">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <li key={i} className="space-y-1.5">
+                      <div className="h-3 w-1/3 animate-pulse rounded bg-surface-2" />
+                      <div className="h-1.5 w-full animate-pulse rounded-full bg-surface-2" />
+                    </li>
+                  ))}
+                </ul>
+              ) : geo.length === 0 ? (
                 <div className="mt-5 grid h-56 place-items-center rounded-md border border-dashed border-border text-[12px] text-muted-foreground">
                   No franchises yet
                 </div>
+
               ) : (
                 <ul className="mt-5 space-y-3">
                   {geo.map((g) => (
