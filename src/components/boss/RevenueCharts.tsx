@@ -74,6 +74,16 @@ export function RevenueCharts({
   }, [paid, range]);
 
   const empty = !loading && !error && paid.length === 0;
+  const errorText = error ? "Revenue aggregates are unavailable right now." : null;
+  const trigger = useTooltipTrigger();
+
+  const streamKeys = useMemo(() => byStream.map((s) => s.type as string), [byStream]);
+  const streamLegend = useLegendToggle(streamKeys);
+  const visibleStreams = byStream.filter((s) => !streamLegend.isHidden(s.type));
+
+  const countryKeys = useMemo(() => byCountry.map((c) => c.country), [byCountry]);
+  const countryLegend = useLegendToggle(countryKeys);
+  const visibleCountries = byCountry.filter((c) => !countryLegend.isHidden(c.country));
 
   return (
     <Section
@@ -85,7 +95,8 @@ export function RevenueCharts({
             <button
               key={r}
               onClick={() => onRangeChange(r)}
-              className={`px-2.5 py-1 text-[11.5px] font-medium uppercase tracking-wider rounded ${
+              aria-pressed={range === r}
+              className={`min-h-8 rounded px-2.5 py-1 text-[11.5px] font-medium uppercase tracking-wider transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-ring)] ${
                 range === r ? "bg-surface-2 text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -96,55 +107,93 @@ export function RevenueCharts({
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">
-        <ChartCard title="Revenue Over Time" subtitle={`Paid + issued · last ${range.toUpperCase()}`}>
-          <ChartShell loading={loading} error={error} empty={empty && true}>
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart data={overTime} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.5} />
-                    <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }} />
-                <YAxis tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }} tickFormatter={(v) => fmtMoney(v)} width={70} />
-                <Tooltip formatter={(v: number) => fmtMoney(v)} contentStyle={tooltipStyle} />
-                <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" fill="url(#revGrad)" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </ChartShell>
-        </ChartCard>
+        <ChartFrame
+          title="Revenue Over Time"
+          subtitle={`Paid + issued · last ${range.toUpperCase()}`}
+          loading={loading}
+          error={errorText}
+          empty={empty || overTime.length === 0}
+          emptyText="No revenue in this window"
+          onRetry={onRetry}
+          minWidth={420}
+        >
+          <ResponsiveContainer width="100%" height={220}>
+            <AreaChart data={overTime} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
+              <defs>
+                <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.5} />
+                  <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+              <XAxis dataKey="date" tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }} />
+              <YAxis tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }} tickFormatter={(v) => fmtMoney(v)} width={70} />
+              <Tooltip trigger={trigger} formatter={(v: number) => fmtMoney(v)} contentStyle={tooltipStyle} />
+              <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" fill="url(#revGrad)" strokeWidth={2} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </ChartFrame>
 
-        <ChartCard title="Revenue by Country" subtitle="Top 10 countries by gross revenue">
-          <ChartShell loading={loading} error={error} empty={byCountry.length === 0}>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={byCountry} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                <XAxis dataKey="country" tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }} />
-                <YAxis tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }} tickFormatter={(v) => fmtMoney(v)} width={70} />
-                <Tooltip formatter={(v: number) => fmtMoney(v)} contentStyle={tooltipStyle} />
-                <Bar dataKey="amount" fill="var(--color-primary)" radius={[3, 3, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartShell>
-        </ChartCard>
+        <ChartFrame
+          title="Revenue by Country"
+          subtitle="Top 10 countries by gross revenue"
+          loading={loading}
+          error={errorText}
+          empty={byCountry.length === 0}
+          emptyText="No country revenue yet"
+          onRetry={onRetry}
+          minWidth={Math.max(420, byCountry.length * 60)}
+          footer={
+            <LegendToggle
+              items={countryKeys.map((c) => ({ key: c, label: c, color: "var(--color-primary)" }))}
+              isHidden={countryLegend.isHidden}
+              onToggle={countryLegend.toggle}
+            />
+          }
+        >
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={visibleCountries} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+              <XAxis dataKey="country" tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }} />
+              <YAxis tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }} tickFormatter={(v) => fmtMoney(v)} width={70} />
+              <Tooltip trigger={trigger} formatter={(v: number) => fmtMoney(v)} contentStyle={tooltipStyle} />
+              <Bar dataKey="amount" fill="var(--color-primary)" radius={[3, 3, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartFrame>
 
-        <ChartCard title="Revenue by Product / Stream" subtitle="Royalty, subscription, license, renewal, product">
-          <ChartShell loading={loading} error={error} empty={byStream.length === 0}>
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
-                <Tooltip formatter={(v: number) => fmtMoney(v)} contentStyle={tooltipStyle} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Pie data={byStream} dataKey="amount" nameKey="type" innerRadius={45} outerRadius={75} paddingAngle={2}>
-                  {byStream.map((s) => (
-                    <Cell key={s.type} fill={STREAM_COLORS[s.type]} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </ChartShell>
-        </ChartCard>
+        <ChartFrame
+          title="Revenue by Product / Stream"
+          subtitle="Royalty, subscription, license, renewal, product"
+          loading={loading}
+          error={errorText}
+          empty={byStream.length === 0}
+          emptyText="No stream revenue yet"
+          onRetry={onRetry}
+          minWidth={280}
+          footer={
+            <LegendToggle
+              items={streamKeys.map((s) => ({
+                key: s,
+                label: s,
+                color: STREAM_COLORS[s as RevenueStream] ?? "var(--color-primary)",
+              }))}
+              isHidden={streamLegend.isHidden}
+              onToggle={streamLegend.toggle}
+            />
+          }
+        >
+          <ResponsiveContainer width="100%" height={220}>
+            <PieChart>
+              <Tooltip trigger={trigger} formatter={(v: number) => fmtMoney(v)} contentStyle={tooltipStyle} />
+              <Pie data={visibleStreams} dataKey="amount" nameKey="type" innerRadius={45} outerRadius={75} paddingAngle={2}>
+                {visibleStreams.map((s) => (
+                  <Cell key={s.type} fill={STREAM_COLORS[s.type]} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </ChartFrame>
       </div>
     </Section>
   );
@@ -158,35 +207,3 @@ const tooltipStyle = {
   color: "var(--color-popover-foreground)",
 };
 
-function ChartCard({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
-  return (
-    <Card>
-      <div className="mb-2">
-        <div className="text-[12px] font-semibold text-foreground">{title}</div>
-        {subtitle && <div className="text-[11px] text-muted-foreground">{subtitle}</div>}
-      </div>
-      {children}
-    </Card>
-  );
-}
-
-function ChartShell({
-  loading, error, empty, children,
-}: { loading?: boolean; error?: boolean; empty?: boolean; children: React.ReactNode }) {
-  if (loading) return <Skeleton text="Loading chart…" />;
-  if (error) return <Skeleton text="Failed to load chart data" tone="destructive" />;
-  if (empty) return <Skeleton text="No revenue in this window" />;
-  return <>{children}</>;
-}
-
-function Skeleton({ text, tone = "muted" }: { text: string; tone?: "muted" | "destructive" }) {
-  return (
-    <div
-      className={`grid h-[220px] place-items-center rounded-md border border-dashed border-border text-[12px] ${
-        tone === "destructive" ? "text-destructive" : "text-muted-foreground"
-      }`}
-    >
-      {text}
-    </div>
-  );
-}
