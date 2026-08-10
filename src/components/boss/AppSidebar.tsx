@@ -140,7 +140,17 @@ export function AppSidebar({
   const [query, setQuery] = useState("");
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCloseMobile();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen, onCloseMobile]);
+
   const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
+
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
