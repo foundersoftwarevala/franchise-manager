@@ -333,13 +333,20 @@ export function AppSidebar({
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
-            className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+            className="absolute inset-0 animate-fade-in bg-background/70 backdrop-blur-sm"
             onClick={onCloseMobile}
             aria-label="Close menu overlay"
           />
-          <div className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] border-r border-border bg-background shadow-2xl">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
+            className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] animate-scale-in border-r border-border bg-background shadow-2xl motion-reduce:animate-none"
+          >
             {content}
           </div>
+        </div>
+
         </div>
       )}
     </>
