@@ -46,13 +46,27 @@ const usd = (n: number) =>
 
 function DashboardWall() {
   const { toast } = useToast();
-  const { data: franchises = [] } = useFranchises();
-  const { data: applications = [] } = useApplications();
-  const { data: territories = [] } = useTerritories();
-  const { data: licenses = [] } = useLicenses();
-  const { data: invoices = [] } = useInvoices();
-  const { data: commissions = [] } = useCommissions();
+  const franchisesQ = useFranchises();
+  const applicationsQ = useApplications();
+  const territoriesQ = useTerritories();
+  const licensesQ = useLicenses();
+  const invoicesQ = useInvoices();
+  const commissionsQ = useCommissions();
+  const { data: franchises = [] } = franchisesQ;
+  const { data: applications = [] } = applicationsQ;
+  const { data: territories = [] } = territoriesQ;
+  const { data: licenses = [] } = licensesQ;
+  const { data: invoices = [] } = invoicesQ;
+  const { data: commissions = [] } = commissionsQ;
   const { data: audit = [] } = useAuditTrail("global");
+  const loading =
+    franchisesQ.isLoading ||
+    applicationsQ.isLoading ||
+    territoriesQ.isLoading ||
+    licensesQ.isLoading ||
+    invoicesQ.isLoading ||
+    commissionsQ.isLoading;
+
 
   useShortcuts([
     {
