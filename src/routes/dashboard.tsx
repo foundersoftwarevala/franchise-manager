@@ -10,8 +10,10 @@ import {
   YAxis,
 } from "recharts";
 import { Card, Section, Stat, WallBody, WallHeader, Btn } from "@/components/boss/Wall";
+import { ErrorBanner, useErrorToast } from "@/components/boss/ErrorState";
 import { useShortcuts } from "@/lib/shortcuts";
 import { useToast } from "@/lib/toast";
+
 import {
   useApplications,
   useAuditTrail,
@@ -66,6 +68,27 @@ function DashboardWall() {
     licensesQ.isLoading ||
     invoicesQ.isLoading ||
     commissionsQ.isLoading;
+  const loadError =
+    franchisesQ.error ??
+    applicationsQ.error ??
+    territoriesQ.error ??
+    licensesQ.error ??
+    invoicesQ.error ??
+    commissionsQ.error ??
+    null;
+  const errorText = loadError ? (loadError as Error).message : null;
+  useErrorToast(loadError, "Dashboard data");
+
+  const retryAll = () => {
+    void franchisesQ.refetch();
+    void applicationsQ.refetch();
+    void territoriesQ.refetch();
+    void licensesQ.refetch();
+    void invoicesQ.refetch();
+    void commissionsQ.refetch();
+  };
+
+
 
 
   useShortcuts([
@@ -134,6 +157,10 @@ function DashboardWall() {
         }
       />
       <WallBody>
+        {errorText && (
+          <ErrorBanner title="Dashboard data failed to load" error={errorText} onRetry={retryAll} />
+        )}
+
         <Section title="Franchise Network">
           <div className="wall-grid">
             <Stat loading={loading} label="Total Franchises" value={franchises.length || undefined} hint="Across all countries" />

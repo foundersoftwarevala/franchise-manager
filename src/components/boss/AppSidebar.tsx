@@ -140,7 +140,17 @@ export function AppSidebar({
   const [query, setQuery] = useState("");
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCloseMobile();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen, onCloseMobile]);
+
   const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
+
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -154,13 +164,35 @@ export function AppSidebar({
   const groupOpen = (label: string, items: NavItem[]) =>
     openGroups[label] ?? items.some((i) => isActive(i.to));
 
+  const onNavKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) return;
+    const nav = e.currentTarget.closest("nav");
+    if (!nav) return;
+    const items = Array.from(
+      nav.querySelectorAll<HTMLElement>('a[href], button[data-nav-group="true"]'),
+    ).filter((el) => el.offsetParent !== null);
+    if (items.length === 0) return;
+    e.preventDefault();
+    const current = items.indexOf(e.target as HTMLElement);
+    const next =
+      e.key === "Home"
+        ? 0
+        : e.key === "End"
+          ? items.length - 1
+          : e.key === "ArrowDown"
+            ? (current + 1 + items.length) % items.length
+            : (current - 1 + items.length) % items.length;
+    items[next]?.focus();
+  };
+
   const ItemLink = ({ item }: { item: NavItem }) => (
     <Link
       to={item.to}
       onClick={onCloseMobile}
+      onKeyDown={onNavKeyDown}
       title={item.label}
       aria-current={isActive(item.to) ? "page" : undefined}
-      className={`group/item relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm transition-colors duration-150 ${
+      className={`group/item relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-background)] ${
         collapsed ? "justify-center px-0" : ""
       } ${
         isActive(item.to)
@@ -171,10 +203,12 @@ export function AppSidebar({
       {isActive(item.to) && (
         <span className="absolute bottom-1.5 left-0 top-1.5 w-[2px] rounded-full bg-primary" />
       )}
-      <item.icon className="h-4 w-4 shrink-0" />
+      <item.icon className="h-4 w-4 shrink-0 transition-transform duration-200" />
       {!collapsed && <span className="truncate">{item.label}</span>}
+      {collapsed && <span className="sr-only">{item.label}</span>}
     </Link>
   );
+
 
   const content = (
     <div className="flex h-full flex-col">
@@ -232,7 +266,10 @@ export function AppSidebar({
         </div>
       )}
 
-      <nav className="flex-1 space-y-3 overflow-y-auto px-2 py-3">
+      <nav
+        className="flex-1 space-y-3 overflow-y-auto px-2 py-3"
+        aria-label="Franchise manager modules"
+      >
         <div className="space-y-0.5">
           {PRIMARY.map((item) => (
             <ItemLink key={item.to} item={item} />
@@ -253,31 +290,40 @@ export function AppSidebar({
           return (
             <div key={group.label}>
               <button
+                data-nav-group="true"
                 onClick={() => setOpenGroups((s) => ({ ...s, [group.label]: !open }))}
+                onKeyDown={onNavKeyDown}
                 aria-expanded={open}
-                className="flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
+                className="flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-background)]"
               >
                 {group.label}
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
               </button>
-              {open && (
-                <div className="mt-0.5 space-y-0.5">
-                  {group.items.map((item) => (
-                    <ItemLink key={item.to} item={item} />
-                  ))}
+              <div
+                className={`grid transition-all duration-200 ease-out ${
+                  open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="mt-0.5 space-y-0.5">
+                    {group.items.map((item) => (
+                      <ItemLink key={item.to} item={item} />
+                    ))}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           );
         })}
       </nav>
+
     </div>
   );
 
   return (
     <>
       <aside
-        className={`sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-background/80 backdrop-blur-xl transition-[width] duration-200 lg:flex ${
+        className={`sticky top-0 hidden h-dvh shrink-0 flex-col border-r border-border bg-background/80 backdrop-blur-xl transition-[width] duration-300 ease-out motion-reduce:transition-none lg:flex ${
           collapsed ? "w-[72px]" : "w-[264px]"
         }`}
       >
@@ -287,14 +333,20 @@ export function AppSidebar({
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <button
-            className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+            className="absolute inset-0 animate-fade-in bg-background/70 backdrop-blur-sm"
             onClick={onCloseMobile}
             aria-label="Close menu overlay"
           />
-          <div className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] border-r border-border bg-background shadow-2xl">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
+            className="absolute inset-y-0 left-0 w-[280px] max-w-[85vw] animate-scale-in border-r border-border bg-background shadow-2xl motion-reduce:animate-none"
+          >
             {content}
           </div>
         </div>
+
       )}
     </>
   );

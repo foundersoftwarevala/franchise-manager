@@ -34,6 +34,7 @@ export function KpiCard({
   help,
   loading = false,
   refreshing = false,
+  error = null,
   onClick,
 }: {
   label: string;
@@ -45,10 +46,12 @@ export function KpiCard({
   help?: string;
   loading?: boolean;
   refreshing?: boolean;
+  error?: string | null;
   onClick?: () => void;
 }) {
   const hasValue = value !== undefined && value !== null && value !== "";
   const Wrapper = onClick ? "button" : "div";
+
 
   return (
     <Wrapper
@@ -92,6 +95,11 @@ export function KpiCard({
           <div className="mt-2.5 h-3 w-16 animate-pulse rounded bg-surface-2" />
           <span className="sr-only">Loading {label}</span>
         </>
+      ) : error ? (
+        <div role="alert" className="mt-2.5">
+          <div className="text-[22px] font-semibold leading-none text-destructive">!</div>
+          <div className="mt-2 truncate text-[11px] text-destructive">{error}</div>
+        </div>
       ) : (
         <>
           <div
@@ -109,6 +117,7 @@ export function KpiCard({
           </div>
         </>
       )}
+
     </Wrapper>
   );
 }
