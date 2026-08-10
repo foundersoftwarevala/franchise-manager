@@ -155,6 +155,7 @@ export function Stat({
   trend,
   help,
   loading,
+  error,
   onClick,
 }: {
   label: string;
@@ -165,6 +166,7 @@ export function Stat({
   trend?: { pct: number; label?: string } | null;
   help?: string;
   loading?: boolean;
+  error?: string | null;
   onClick?: () => void;
 }) {
   return (
@@ -177,10 +179,12 @@ export function Stat({
       trend={trend}
       help={help}
       loading={loading}
+      error={error ?? null}
       onClick={onClick}
     />
   );
 }
+
 
 
 export function EmptyState({
