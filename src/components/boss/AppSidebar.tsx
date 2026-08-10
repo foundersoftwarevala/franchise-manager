@@ -154,13 +154,35 @@ export function AppSidebar({
   const groupOpen = (label: string, items: NavItem[]) =>
     openGroups[label] ?? items.some((i) => isActive(i.to));
 
+  const onNavKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) return;
+    const nav = e.currentTarget.closest("nav");
+    if (!nav) return;
+    const items = Array.from(
+      nav.querySelectorAll<HTMLElement>('a[href], button[data-nav-group="true"]'),
+    ).filter((el) => el.offsetParent !== null);
+    if (items.length === 0) return;
+    e.preventDefault();
+    const current = items.indexOf(e.target as HTMLElement);
+    const next =
+      e.key === "Home"
+        ? 0
+        : e.key === "End"
+          ? items.length - 1
+          : e.key === "ArrowDown"
+            ? (current + 1 + items.length) % items.length
+            : (current - 1 + items.length) % items.length;
+    items[next]?.focus();
+  };
+
   const ItemLink = ({ item }: { item: NavItem }) => (
     <Link
       to={item.to}
       onClick={onCloseMobile}
+      onKeyDown={onNavKeyDown}
       title={item.label}
       aria-current={isActive(item.to) ? "page" : undefined}
-      className={`group/item relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm transition-colors duration-150 ${
+      className={`group/item relative flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-background)] ${
         collapsed ? "justify-center px-0" : ""
       } ${
         isActive(item.to)
@@ -171,10 +193,12 @@ export function AppSidebar({
       {isActive(item.to) && (
         <span className="absolute bottom-1.5 left-0 top-1.5 w-[2px] rounded-full bg-primary" />
       )}
-      <item.icon className="h-4 w-4 shrink-0" />
+      <item.icon className="h-4 w-4 shrink-0 transition-transform duration-200" />
       {!collapsed && <span className="truncate">{item.label}</span>}
+      {collapsed && <span className="sr-only">{item.label}</span>}
     </Link>
   );
+
 
   const content = (
     <div className="flex h-full flex-col">
