@@ -136,38 +136,40 @@ function DashboardWall() {
       <WallBody>
         <Section title="Franchise Network">
           <div className="wall-grid">
-            <Stat label="Total Franchises" value={franchises.length || undefined} hint="Across all countries" />
-            <Stat label="Active" tone="success" value={byStatus("active") || undefined} />
-            <Stat label="Pending" tone="warning" value={byStatus("pending") || undefined} />
-            <Stat label="Suspended" tone="destructive" value={byStatus("suspended") || undefined} />
-            <Stat label="Cancelled" value={byStatus("cancelled") || undefined} />
-            <Stat label="Countries" value={new Set(franchises.map((f) => f.country)).size || undefined} />
-            <Stat label="States / Regions" value={new Set(territories.map((t) => t.region)).size || undefined} />
-            <Stat label="Applications" value={applications.length || undefined} />
+            <Stat loading={loading} label="Total Franchises" value={franchises.length || undefined} hint="Across all countries" />
+            <Stat loading={loading} label="Active" tone="success" value={byStatus("active") || undefined} />
+            <Stat loading={loading} label="Pending" tone="warning" value={byStatus("pending") || undefined} />
+            <Stat loading={loading} label="Suspended" tone="destructive" value={byStatus("suspended") || undefined} />
+            <Stat loading={loading} label="Cancelled" value={byStatus("cancelled") || undefined} />
+            <Stat loading={loading} label="Countries" value={new Set(franchises.map((f) => f.country)).size || undefined} />
+            <Stat loading={loading} label="States / Regions" value={new Set(territories.map((t) => t.region)).size || undefined} />
+            <Stat loading={loading} label="Applications" value={applications.length || undefined} />
           </div>
         </Section>
 
         <Section title="Revenue & Operations">
           <div className="wall-grid">
-            <Stat label="Monthly Revenue" tone="info" value={revenueMtd ? usd(revenueMtd) : undefined} />
-            <Stat label="Lifetime Revenue" tone="info" value={lifetime ? usd(lifetime) : undefined} />
-            <Stat label="Invoices" value={invoices.length || undefined} />
-            <Stat label="Products Assigned" value={franchises.reduce((a, f) => a + f.productsAssigned, 0) || undefined} />
+            <Stat loading={loading} label="Monthly Revenue" tone="info" value={revenueMtd ? usd(revenueMtd) : undefined} />
+            <Stat loading={loading} label="Lifetime Revenue" tone="info" value={lifetime ? usd(lifetime) : undefined} />
+            <Stat loading={loading} label="Invoices" value={invoices.length || undefined} />
+            <Stat loading={loading} label="Products Assigned" value={franchises.reduce((a, f) => a + f.productsAssigned, 0) || undefined} />
             <Stat
+              loading={loading}
               label="License Usage"
               value={licenses.length ? `${licenses.reduce((a, l) => a + l.devices, 0)} / ${licenses.reduce((a, l) => a + l.devicesMax, 0)}` : undefined}
             />
-            <Stat label="Renewal Due" tone="warning" value={renewalDue || undefined} />
+            <Stat loading={loading} label="Renewal Due" tone="warning" value={renewalDue || undefined} />
           </div>
         </Section>
 
         <Section title="Attention">
           <div className="wall-grid">
-            <Stat label="Overdue Invoices" value={invoices.filter((i) => i.status === "overdue").length || undefined} tone="destructive" />
-            <Stat label="Pending Approvals" tone="warning" value={pendingApprovals || undefined} />
-            <Stat label="Compliance Alerts" tone="destructive" value={complianceAlerts || undefined} />
+            <Stat loading={loading} label="Overdue Invoices" value={invoices.filter((i) => i.status === "overdue").length || undefined} tone="destructive" />
+            <Stat loading={loading} label="Pending Approvals" tone="warning" value={pendingApprovals || undefined} />
+            <Stat loading={loading} label="Compliance Alerts" tone="destructive" value={complianceAlerts || undefined} />
           </div>
         </Section>
+
 
         <Section title="At a Glance">
           <div className="grid gap-3 lg:grid-cols-3">
