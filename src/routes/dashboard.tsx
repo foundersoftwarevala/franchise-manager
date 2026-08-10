@@ -157,6 +157,10 @@ function DashboardWall() {
         }
       />
       <WallBody>
+        {errorText && (
+          <ErrorBanner title="Dashboard data failed to load" error={errorText} onRetry={retryAll} />
+        )}
+
         <Section title="Franchise Network">
           <div className="wall-grid">
             <Stat loading={loading} label="Total Franchises" value={franchises.length || undefined} hint="Across all countries" />
