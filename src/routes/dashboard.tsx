@@ -10,8 +10,10 @@ import {
   YAxis,
 } from "recharts";
 import { Card, Section, Stat, WallBody, WallHeader, Btn } from "@/components/boss/Wall";
+import { ErrorBanner, useErrorToast } from "@/components/boss/ErrorState";
 import { useShortcuts } from "@/lib/shortcuts";
 import { useToast } from "@/lib/toast";
+
 import {
   useApplications,
   useAuditTrail,
