@@ -34,6 +34,7 @@ export function KpiCard({
   help,
   loading = false,
   refreshing = false,
+  error = null,
   onClick,
 }: {
   label: string;
@@ -45,10 +46,12 @@ export function KpiCard({
   help?: string;
   loading?: boolean;
   refreshing?: boolean;
+  error?: string | null;
   onClick?: () => void;
 }) {
   const hasValue = value !== undefined && value !== null && value !== "";
   const Wrapper = onClick ? "button" : "div";
+
 
   return (
     <Wrapper
