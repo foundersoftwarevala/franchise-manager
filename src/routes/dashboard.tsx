@@ -232,10 +232,20 @@ function DashboardWall() {
               <div className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Geographic Distribution
               </div>
-              {geo.length === 0 ? (
+              {loading ? (
+                <ul className="mt-5 space-y-3">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <li key={i} className="space-y-1.5">
+                      <div className="h-3 w-1/3 animate-pulse rounded bg-surface-2" />
+                      <div className="h-1.5 w-full animate-pulse rounded-full bg-surface-2" />
+                    </li>
+                  ))}
+                </ul>
+              ) : geo.length === 0 ? (
                 <div className="mt-5 grid h-56 place-items-center rounded-md border border-dashed border-border text-[12px] text-muted-foreground">
                   No franchises yet
                 </div>
+
               ) : (
                 <ul className="mt-5 space-y-3">
                   {geo.map((g) => (
