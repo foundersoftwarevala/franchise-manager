@@ -224,7 +224,9 @@ function DashboardWall() {
                     <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" strokeWidth={2} fill="url(#revFill)" />
                   </AreaChart>
                 </ResponsiveContainer>
+                )}
               </div>
+
             </Card>
             <Card>
               <div className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
