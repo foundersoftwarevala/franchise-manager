@@ -188,7 +188,19 @@ function DashboardWall() {
                 </Link>
               </div>
               <div className="mt-5 h-56">
+                {loading ? (
+                  <div className="flex h-full items-end gap-2 rounded-md border border-dashed border-border p-3">
+                    {[38, 55, 30, 68, 47, 80, 60, 72, 44, 88, 65, 76].map((h, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 animate-pulse rounded-t bg-surface-2"
+                        style={{ height: `${h}%` }}
+                      />
+                    ))}
+                  </div>
+                ) : (
                 <ResponsiveContainer width="100%" height="100%">
+
                   <AreaChart data={trend} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
                     <defs>
                       <linearGradient id="revFill" x1="0" y1="0" x2="0" y2="1">
