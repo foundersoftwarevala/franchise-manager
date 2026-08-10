@@ -313,7 +313,7 @@ export function AppSidebar({
   return (
     <>
       <aside
-        className={`sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-background/80 backdrop-blur-xl transition-[width] duration-200 lg:flex ${
+        className={`sticky top-0 hidden h-dvh shrink-0 flex-col border-r border-border bg-background/80 backdrop-blur-xl transition-[width] duration-300 ease-out motion-reduce:transition-none lg:flex ${
           collapsed ? "w-[72px]" : "w-[264px]"
         }`}
       >
