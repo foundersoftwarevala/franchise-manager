@@ -35,13 +35,16 @@ export function RevenueCharts({
   error,
   range,
   onRangeChange,
+  onRetry,
 }: {
   invoices: Invoice[];
   loading?: boolean;
   error?: boolean;
   range: Range;
   onRangeChange: (r: Range) => void;
+  onRetry?: () => void;
 }) {
+
   const paid = useMemo(() => invoices.filter((i) => i.status === "paid" || i.status === "issued"), [invoices]);
 
   const byCountry = useMemo(() => {
