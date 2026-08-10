@@ -6,7 +6,6 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
-  Legend,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -15,8 +14,10 @@ import {
   YAxis,
 } from "recharts";
 import type { Invoice, RevenueStream } from "@/lib/data-hooks";
-import { Card, Section } from "./Wall";
+import { Section } from "./Wall";
+import { ChartFrame, LegendToggle, useLegendToggle, useTooltipTrigger } from "./ChartFrame";
 import { fmtMoney } from "@/lib/export";
+
 
 type Range = "7d" | "30d" | "90d" | "ytd";
 
