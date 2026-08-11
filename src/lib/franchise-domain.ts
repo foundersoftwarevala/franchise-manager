@@ -148,6 +148,17 @@ export const STATUS_TONE: Record<
   info: "info",
   warning: "warning",
   success: "success",
+  // Module statuses (countries, catalog, training, legal, marketing, comms, onboarding)
+  planned: "info",
+  paused: "neutral",
+  completed: "success",
+  blocked: "destructive",
+  scheduled: "info",
+  sent: "success",
+  signed: "success",
+  published: "success",
+  archived: "neutral",
+  failed: "destructive",
 };
 
 export const STAGE_LABEL: Record<ApplicationStage, string> = {
