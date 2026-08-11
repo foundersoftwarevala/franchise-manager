@@ -196,6 +196,96 @@ export type Database = {
           },
         ]
       }
+      communications: {
+        Row: {
+          audience: string
+          body: string
+          channel: string
+          created_at: string
+          delivered: number
+          id: string
+          read_count: number
+          recipients: number
+          scheduled_at: string | null
+          sent_by: string
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          audience: string
+          body?: string
+          channel: string
+          created_at?: string
+          delivered?: number
+          id?: string
+          read_count?: number
+          recipients?: number
+          scheduled_at?: string | null
+          sent_by?: string
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          body?: string
+          channel?: string
+          created_at?: string
+          delivered?: number
+          id?: string
+          read_count?: number
+          recipients?: number
+          scheduled_at?: string | null
+          sent_by?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      countries: {
+        Row: {
+          code: string
+          coverage_pct: number
+          created_at: string
+          currency: string
+          expansion_plan: string
+          id: string
+          market_size: number
+          name: string
+          population: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          coverage_pct?: number
+          created_at?: string
+          currency: string
+          expansion_plan?: string
+          id?: string
+          market_size?: number
+          name: string
+          population?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          coverage_pct?: number
+          created_at?: string
+          currency?: string
+          expansion_plan?: string
+          id?: string
+          market_size?: number
+          name?: string
+          population?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       documents: {
         Row: {
           category: string
@@ -818,6 +908,59 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_documents: {
+        Row: {
+          created_at: string
+          doc_type: string
+          effective_date: string | null
+          expiry_date: string | null
+          franchise: string
+          franchise_id: string | null
+          id: string
+          signature_status: string
+          signed_by: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          doc_type: string
+          effective_date?: string | null
+          expiry_date?: string | null
+          franchise: string
+          franchise_id?: string | null
+          id?: string
+          signature_status?: string
+          signed_by?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          doc_type?: string
+          effective_date?: string | null
+          expiry_date?: string | null
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          signature_status?: string
+          signed_by?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_documents_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       licenses: {
         Row: {
           compliance_cleared: boolean
@@ -883,6 +1026,333 @@ export type Database = {
           },
         ]
       }
+      marketing_campaigns: {
+        Row: {
+          audience: string
+          channel: string
+          clicks: number
+          conversions: number
+          coupons: number
+          created_at: string
+          end_date: string | null
+          id: string
+          leads: number
+          name: string
+          opens: number
+          sent: number
+          spend: number
+          start_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          audience: string
+          channel: string
+          clicks?: number
+          conversions?: number
+          coupons?: number
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          leads?: number
+          name: string
+          opens?: number
+          sent?: number
+          spend?: number
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          channel?: string
+          clicks?: number
+          conversions?: number
+          coupons?: number
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          leads?: number
+          name?: string
+          opens?: number
+          sent?: number
+          spend?: number
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      onboarding_tasks: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          due_date: string | null
+          franchise: string
+          franchise_id: string | null
+          id: string
+          owner: string
+          status: string
+          step: string
+          step_order: number
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string | null
+          franchise: string
+          franchise_id?: string | null
+          id?: string
+          owner?: string
+          status?: string
+          step: string
+          step_order?: number
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string | null
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          owner?: string
+          status?: string
+          step?: string
+          step_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_tasks_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_assignments: {
+        Row: {
+          category: string
+          created_at: string
+          discount_pct: number
+          franchise: string
+          franchise_id: string | null
+          id: string
+          kind: string
+          price: number
+          product: string
+          product_id: string | null
+          region: string
+          status: string
+          stock: number
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          discount_pct?: number
+          franchise: string
+          franchise_id?: string | null
+          id?: string
+          kind?: string
+          price?: number
+          product: string
+          product_id?: string | null
+          region: string
+          status?: string
+          stock?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          discount_pct?: number
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          kind?: string
+          price?: number
+          product?: string
+          product_id?: string | null
+          region?: string
+          status?: string
+          stock?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_assignments_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_assignments_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          currency: string
+          id: string
+          kind: string
+          list_price: number
+          name: string
+          sku: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          currency?: string
+          id?: string
+          kind?: string
+          list_price?: number
+          name: string
+          sku: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          kind?: string
+          list_price?: number
+          name?: string
+          sku?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      support_tickets: {
+        Row: {
+          channel: string
+          created_at: string
+          csat: number | null
+          first_response_mins: number | null
+          franchise: string
+          franchise_id: string | null
+          id: string
+          owner: string
+          priority: string
+          sla_due: string | null
+          status: string
+          subject: string
+          ticket_no: string
+          updated_at: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          csat?: number | null
+          first_response_mins?: number | null
+          franchise: string
+          franchise_id?: string | null
+          id?: string
+          owner?: string
+          priority?: string
+          sla_due?: string | null
+          status?: string
+          subject: string
+          ticket_no: string
+          updated_at?: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          csat?: number | null
+          first_response_mins?: number | null
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          owner?: string
+          priority?: string
+          sla_due?: string | null
+          status?: string
+          subject?: string
+          ticket_no?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_members: {
+        Row: {
+          created_at: string
+          email: string
+          franchise: string
+          franchise_id: string | null
+          id: string
+          last_login: string | null
+          name: string
+          phone: string | null
+          role: string
+          sessions: number
+          status: string
+          two_factor: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          last_login?: string | null
+          name: string
+          phone?: string | null
+          role?: string
+          sessions?: number
+          status?: string
+          two_factor?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          last_login?: string | null
+          name?: string
+          phone?: string | null
+          role?: string
+          sessions?: number
+          status?: string
+          two_factor?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_members_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       territories: {
         Row: {
           assigned_to: string | null
@@ -924,6 +1394,92 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      training_courses: {
+        Row: {
+          avg_score: number
+          certificate: boolean
+          completed: number
+          created_at: string
+          duration_mins: number
+          enrolled: number
+          id: string
+          kind: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          avg_score?: number
+          certificate?: boolean
+          completed?: number
+          created_at?: string
+          duration_mins?: number
+          enrolled?: number
+          id?: string
+          kind?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          avg_score?: number
+          certificate?: boolean
+          completed?: number
+          created_at?: string
+          duration_mins?: number
+          enrolled?: number
+          id?: string
+          kind?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      training_progress: {
+        Row: {
+          certificates: number
+          courses_completed: number
+          created_at: string
+          franchise: string
+          franchise_id: string | null
+          id: string
+          member: string
+          score: number
+          updated_at: string
+        }
+        Insert: {
+          certificates?: number
+          courses_completed?: number
+          created_at?: string
+          franchise: string
+          franchise_id?: string | null
+          id?: string
+          member: string
+          score?: number
+          updated_at?: string
+        }
+        Update: {
+          certificates?: number
+          courses_completed?: number
+          created_at?: string
+          franchise?: string
+          franchise_id?: string | null
+          id?: string
+          member?: string
+          score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_progress_franchise_id_fkey"
+            columns: ["franchise_id"]
+            isOneToOne: false
+            referencedRelation: "franchises"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
