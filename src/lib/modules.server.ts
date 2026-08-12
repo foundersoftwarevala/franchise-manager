@@ -168,3 +168,64 @@ export const mapTask = (r: Row) => ({
   dueDate: sn(r["due_date"]),
   completedAt: sn(r["completed_at"]),
 });
+
+/** Insert a single row and return the created record. */
+export async function insertRow(table: string, values: Row) {
+  const { data, error } = await panelClient()
+    .from(table as never)
+    .insert(values as never)
+    .select("*")
+    .single();
+  if (error) throw new Error(error.message);
+  return data as Row;
+}
+
+/** Append an audit-log entry so module actions are audit-ready. */
+export async function audit(entry: {
+  actor: string;
+  action: string;
+  target: string;
+  scope: string;
+  meta?: string | null;
+  oldValue?: string | null;
+  newValue?: string | null;
+}) {
+  const { error } = await panelClient()
+    .from("audit_log" as never)
+    .insert({
+      actor: entry.actor,
+      action: entry.action,
+      target: entry.target,
+      scope: entry.scope,
+      meta: entry.meta ?? null,
+      old_value: entry.oldValue ?? null,
+      new_value: entry.newValue ?? null,
+      result: "success",
+    } as never);
+  if (error) throw new Error(error.message);
+}
+
+/** Audit entries for one module scope, newest first. */
+export async function auditForScope(scope: string, limit = 40) {
+  const { data, error } = await panelClient()
+    .from("audit_log" as never)
+    .select("*")
+    .eq("scope", scope)
+    .order("at", { ascending: false })
+    .limit(limit);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Row[];
+}
+
+export const mapAudit = (r: Row) => ({
+  id: s(r["id"]),
+  at: s(r["at"]),
+  actor: s(r["actor"]),
+  action: s(r["action"]),
+  target: s(r["target"]),
+  scope: s(r["scope"]),
+  oldValue: sn(r["old_value"]),
+  newValue: sn(r["new_value"]),
+  result: s(r["result"]),
+  meta: sn(r["meta"]),
+});

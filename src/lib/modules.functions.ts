@@ -120,9 +120,109 @@ export const setOnboardingTaskStatus = createServerFn({ method: "POST" })
     });
   });
 
+export const setOnboardingTaskOwner = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z
+      .object({ ids: z.array(z.string().uuid()).min(1), owner: z.string().min(2).max(80) })
+      .parse(input),
+  )
+  .handler(async ({ data }) => {
+    const m = await import("./modules.server");
+    const res = await m.patch("onboarding_tasks", data.ids, { owner: data.owner });
+    await m.audit({
+      actor: "Boss Admin",
+      action: "onboarding_task_assigned",
+      target: data.ids.join(","),
+      scope: "onboarding",
+      meta: `${data.ids.length} task(s) assigned`,
+      newValue: data.owner,
+    });
+    return res;
+  });
+
+export const setOnboardingTaskDue = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        ids: z.array(z.string().uuid()).min(1),
+        dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data }) => {
+    const m = await import("./modules.server");
+    const res = await m.patch("onboarding_tasks", data.ids, { due_date: data.dueDate });
+    await m.audit({
+      actor: "Boss Admin",
+      action: "onboarding_due_date_set",
+      target: data.ids.join(","),
+      scope: "onboarding",
+      meta: `${data.ids.length} task(s) rescheduled`,
+      newValue: data.dueDate,
+    });
+    return res;
+  });
+
 export const sendCommunication = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => z.object({ ids: z.array(z.string().uuid()).min(1) }).parse(input))
   .handler(async ({ data }) => {
     const m = await import("./modules.server");
-    return m.patch("communications", data.ids, { status: "sent" });
+    const res = await m.patch("communications", data.ids, { status: "sent" });
+    await m.audit({
+      actor: "Boss Admin",
+      action: "communication_sent",
+      target: data.ids.join(","),
+      scope: "communication",
+      meta: `${data.ids.length} message(s) dispatched`,
+      oldValue: "queued",
+      newValue: "sent",
+    });
+    return res;
   });
+
+export const createCommunication = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        subject: z.string().min(3).max(160),
+        body: z.string().min(3).max(4000),
+        channel: z.string().min(2).max(40),
+        audience: z.string().min(2).max(120),
+        recipients: z.number().int().min(0).max(100000),
+        scheduledAt: z.string().min(4).nullable(),
+        status: z.enum(["draft", "scheduled", "sent", "template"]),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data }) => {
+    const m = await import("./modules.server");
+    const row = await m.insertRow("communications", {
+      subject: data.subject,
+      body: data.body,
+      channel: data.channel,
+      audience: data.audience,
+      sent_by: "Boss Admin",
+      recipients: data.recipients,
+      delivered: data.status === "sent" ? data.recipients : 0,
+      read_count: 0,
+      scheduled_at: data.scheduledAt,
+      status: data.status,
+    });
+    await m.audit({
+      actor: "Boss Admin",
+      action: data.status === "template" ? "communication_template_created" : "communication_created",
+      target: data.subject,
+      scope: "communication",
+      meta: `${data.channel} · ${data.audience} · ${data.recipients} recipients`,
+      newValue: data.status,
+    });
+    return m.mapMessage(row);
+  });
+
+export const listModuleAudit = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => z.object({ scope: z.string().min(2).max(40) }).parse(input))
+  .handler(async ({ data }) => {
+    const m = await import("./modules.server");
+    return (await m.auditForScope(data.scope)).map(m.mapAudit);
+  });
+
