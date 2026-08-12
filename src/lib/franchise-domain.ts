@@ -154,6 +154,7 @@ export const STATUS_TONE: Record<
   completed: "success",
   blocked: "destructive",
   scheduled: "info",
+  template: "neutral",
   sent: "success",
   signed: "success",
   published: "success",
