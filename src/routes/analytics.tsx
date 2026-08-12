@@ -226,7 +226,7 @@ function AnalyticsWall() {
         {failed && (
           <ErrorBanner
             title="Analytics data failed to load"
-            description="One or more analytics queries could not be completed."
+            error={failed}
             onRetry={() => {
               void perf.refetch();
               void invoices.refetch();
@@ -234,6 +234,7 @@ function AnalyticsWall() {
             }}
           />
         )}
+
 
         <FilterBar
           region={country}
