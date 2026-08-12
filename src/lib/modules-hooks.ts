@@ -122,3 +122,42 @@ export const useSetTaskStatus = () =>
   );
 export const useSendCommunication = () =>
   useInvalidating((v: { ids: string[] }) => sendCommunication({ data: v } as never), "fm-communications");
+
+export type ModuleAuditRow = {
+  id: string; at: string; actor: string; action: string; target: string; scope: string;
+  oldValue: string | null; newValue: string | null; result: string; meta: string | null;
+};
+
+export const useModuleAudit = (scope: string) =>
+  useQuery<ModuleAuditRow[]>({
+    queryKey: ["fm-module-audit", scope],
+    queryFn: () => listModuleAudit({ data: { scope } } as never) as Promise<ModuleAuditRow[]>,
+    staleTime: 10_000,
+  });
+
+export const useSetTaskOwner = () =>
+  useInvalidating(
+    (v: { ids: string[]; owner: string }) => setOnboardingTaskOwner({ data: v } as never),
+    "fm-onboarding-tasks",
+  );
+
+export const useSetTaskDue = () =>
+  useInvalidating(
+    (v: { ids: string[]; dueDate: string }) => setOnboardingTaskDue({ data: v } as never),
+    "fm-onboarding-tasks",
+  );
+
+export const useCreateCommunication = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (v: {
+      subject: string; body: string; channel: string; audience: string;
+      recipients: number; scheduledAt: string | null;
+      status: "draft" | "scheduled" | "sent" | "template";
+    }) => createCommunication({ data: v } as never),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["fm-communications"] });
+      void qc.invalidateQueries({ queryKey: ["fm-module-audit", "communication"] });
+    },
+  });
+};
