@@ -226,9 +226,9 @@ function OnboardingWall() {
             onSearch={setSearch}
             searchPlaceholder="Search step, franchise or owner…"
             filters={[
-              ...(franchise ? [{ id: "f", label: `Franchise: ${franchise}`, onClear: () => setFranchise("") }] : []),
-              ...(status ? [{ id: "s", label: `Status: ${status}`, onClear: () => setStatus_("") }] : []),
-              ...(dueFilter ? [{ id: "d", label: dueFilter, onClear: () => setDueFilter("") }] : []),
+              ...(franchise ? [{ id: "f", label: `Franchise: ${franchise}`, onRemove: () => setFranchise("") }] : []),
+              ...(status ? [{ id: "s", label: `Status: ${status}`, onRemove: () => setStatus_("") }] : []),
+              ...(dueFilter ? [{ id: "d", label: dueFilter, onRemove: () => setDueFilter("") }] : []),
             ]}
             onClearFilters={() => {
               setFranchise("");
