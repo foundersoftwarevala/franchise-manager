@@ -1,11 +1,13 @@
 // TanStack Query hooks for the franchise modules backed by real Cloud tables.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  createCommunication,
   listCampaigns,
   listCommunications,
   listCountries,
   listCourses,
   listLegalDocuments,
+  listModuleAudit,
   listOnboardingTasks,
   listProductAssignments,
   listProducts,
@@ -18,11 +20,14 @@ import {
   setCountryStatus,
   setLegalStatus,
   setMemberStatus,
+  setOnboardingTaskDue,
+  setOnboardingTaskOwner,
   setOnboardingTaskStatus,
   setTicketStatus,
 } from "./modules.functions";
 
 const STALE = 30_000;
+
 
 export type CountryRow = {
   id: string; name: string; code: string; currency: string; population: number;
